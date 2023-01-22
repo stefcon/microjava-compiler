@@ -55,7 +55,7 @@ public class MJParserTest {
 	        	if (objFile.exists())
 	        		objFile.delete();
 	        	
-	        	// Code generation...
+	        	// Code generation... TODO: Dok se ne proveri semantic pass, ostaviti zakomentarisano
 //	        	CodeGenerator codeGenerator = new CodeGenerator();
 //	        	prog.traverseBottomUp(codeGenerator);
 //	        	Code.dataSize = semanticCheck.nVars;
