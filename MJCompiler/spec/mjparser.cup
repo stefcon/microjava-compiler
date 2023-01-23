@@ -58,9 +58,9 @@ terminal PROG;
 terminal ASSIGN;
 terminal LBRACKET, RBRACKET, LBRACE, RBRACE, LPAREN, RPAREN;
 terminal SEMI, COMMA, DOT, COLON, ARROW;
-terminal PRINT, READ, RETURN, PLUS; 
+terminal PRINT, READ, NEW; 
 terminal VOID;
-terminal WHILE, FOREACH, IF, ELSE, CONTINUE, BREAK;
+terminal WHILE, FOREACH, IF, ELSE, CONTINUE, BREAK, RETURN;
 terminal CONST;
 
 terminal Integer NUMBER;
@@ -78,13 +78,15 @@ terminal CLASS, EXT;
 
 nonterminal ProgDeclList, MethodDeclList;
 nonterminal ConstDeclStart, ConstList, ConstDeclaration, ConstType;
-nonterminal ProgVarDeclStart;
-nonterminal VarDeclStart, VarList, VarName, VarDecl;
-nonterminal FormalParamList, FormalParamDecl, FormParams, ActualPars, ActualParamList; 
+nonterminal ProgVarDeclStart, ProgVarList, ProgVarDeclaration;
+nonterminal VarDeclStart, VarDeclList, VarList, VarName;
+nonterminal FormalParamList, FormalParamDecl, FormalParams; 
 nonterminal StatementList, Statement;
-nonterminal Unmatched, Matched;
-nonterminal IfConstruct, IfCondition;
+nonterminal IfConstruct, WhileConstruct, ControlCondition, Condition, ConditionTerm, ConditionFactor;
+nonterminal ForeachConstruct, ForeachDesignator;
 nonterminal DesignatorStatement;
+nonterminal AssignmentStatementExpr, AssignmentStatementDesignator, DesignatorListStart, DesignatorListContent;
+nonterminal FunctionCall, FunctionName, OptionalMethodActualParams, ActualParams, ActualParamList;
 
 nonterminal Relop, Addop, Mulop; 	
 
@@ -95,7 +97,6 @@ nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Term, Expr, Factor;
 precedence left ELSE;
 
 
-
 Program ::= (Program) PROG ProgName:p ProgDeclList LBRACE MethodDeclList RBRACE 
 ;
 
@@ -103,12 +104,13 @@ ProgName ::= (ProgName) IDENT:pName
 ;
 
 
+/* TODO: Dodati logiku za klase */
 
 ProgDeclList ::= (ProgListConst) ProgDeclList ConstDeclStart 
 				 |
 				 (ProgListVar) ProgDeclList ProgVarDeclStart /* bilo je list */
 				 |
-				 (NoProgDeclList)/* epsilon */
+				 (NoProgDeclList) /* epsilon */
 				 ;
 
 
@@ -152,7 +154,7 @@ VarDeclList ::= (VarDeclarations) VarDeclList VarDeclStart
 
 			   
 			   
-ProgVarDeclList ::= (ProgVarDeclaration) Type ProgVarList SEMI
+ProgVarDeclStart ::= (ProgVarDeclaration) Type ProgVarList SEMI
 ;
 
 
@@ -161,29 +163,29 @@ ProgVarList ::= (ProgVarList) ProgVarList COMMA ProgVarDeclaration
 				(BaseProgVarDeclaration) ProgVarDeclaration
 				;
 				
-ProgVarAssignment ::= (ProgVar) VarDeclaration
+ProgVarDeclaration ::= (ProgVar) VarDeclaration
 ;
 
 
-Type ::= (Type) IDENT:typeName 
-;
-
-
+/* Method declaration (defintion) grammar */
 MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDecl
 				   |
 				   (NoMethodDecl) /* epsilon */
 				   ;
 
-MethodDecl ::= (MethodDecl) MethodTypeName LPAREN FormParams RPAREN VarDeclList LBRACE StatementList RBRACE 
+MethodDecl ::= (MethodDecl) MethodTypeName LPAREN FormalParams RPAREN VarDeclList LBRACE StatementList RBRACE 
 ;
 
 MethodTypeName ::= (MethodTypeName) Type:retType IDENT:methName
-;
+				   |
+				   (MethodVoidName) VOID IDENT:methName
+				   ;
+				   
 
-FormParams ::= (FormParams) FormalParamList
-			   |
-			   (NoFormParam) /* epsilon */
-			   ;
+FormalParams ::= (FormalParams) FormalParamList
+			   	 |
+			     (NoFormalParam) /* epsilon */
+			     ;
 
 FormalParamList ::= (FormalParamDecls) FormalParamList COMMA FormalParamDecl
 					|
@@ -194,15 +196,17 @@ FormalParamDecl ::= (FormalParamDecl) Type IDENT
 ;
 
 
+/* Statement grammar */
 StatementList ::= (Statements) StatementList Statement 
 				  |
-				  (NoStmt) /* epsilon */
+				  (NoStatement) /* epsilon */
 				  ;
 
-/* Statement grammar */
 Statement ::= (DesignatorStatement) DesignatorStatement SEMI
 			  |
 			  (WhileStatement) WhileConstruct
+			  |
+			  (ForeachStatement) ForeachConstruct
 			  |
 			  (PrintStatement) PRINT LPAREN Expr RPAREN SEMI
 			  |
@@ -232,10 +236,33 @@ IfConstruct ::= (IfConstruct) IF ControlCondition Statement
 WhileConstruct ::= (WhileConstruct) WHILE ControlCondition Statement
 ;
 
+ForeachConstruct ::= (ForeachConstruct) ForeachDesignator DOT FOREACH LPAREN IDENT ARROW Statement RPAREN SEMI
+;
+
+ForeachDesignator ::= (ForeachDesignator) Designator
+;
+
 
 ControlCondition ::= (ControlCondition) LPAREN Condition RPAREN
 ; /* error recovery kasnije */
 
+
+
+/* Condition hierarchy (AND > OR) */
+Condition ::= (ConditionOr) Condition OR CondTerm
+			  |
+			  (ConditionSingle) Condition
+			  ;
+			  
+ConditionTerm ::= (ConditionTermAnd) ConditionTerm AND 	ConditionFactor
+				  |
+				  (ConditionTermSingle) ConditionTerm
+				  ;
+				  
+ConditionFactor ::= (ConditionFactorRel) Expr Relop Expr
+					|
+					(ConditionFactorSingle) Expr
+					;
 
 /*
 Unmatched ::= (UnmatchedIf) IF Expr Statement | (UnmatchedIfElse) IF Expr Matched ELSE Unmatched;
@@ -254,19 +281,106 @@ Matched ::= (Assignment) Designator:dest EQUAL Expr:e SEMI
 			  | 
 			  (MatchedIf) IF Expr Matched ELSE Matched
 			  |
-			  (ProcCall) Designator:func LPAREN ActualPars RPAREN SEMI
+			  (ProcCall) Designator:func LPAREN ActualParams RPAREN SEMI
 			  ;
 */
 			  
-Expr ::= (AddExpr) Expr:te Addop Term:t
+/* Goes with matched
+ActualPars ::= (Actuals) ActualParamList 
+			   | 
+			   (NoActuals) /* epsilon */ 
+			   ;
+		
+			   
+ActualParamList ::= (ActualParams) ActualParamList COMMA Expr
+					|
+					(ActualParam) Expr
+					;
+*/
+		
+		   
+
+/* Designator */
+DesignatorStatement ::= (AssignmentStatement) Designator AssignmentStatementExpr
+						|
+						(MultipleAssignmentStatement) DesignatorListStart AssignmentStatementDesignator
+						|
+						(DesignatorStmtFunctionCall) FunctionCall
+						|
+						(IncrementDesignator) Designator INC
+						|
+						(DecrimentDesignator) Designator DEC
+						;
+						
+
+
+
+AssignmentStatementExpr ::= (AssignmentExpr) ASSIGN Expr
+; /* TODO: error handling */
+					   	
+
+		
+					   	
+DesignatorListStart ::= (DesignatorListStart) LBRACKET DesignatorListContent RBRACKET
+;
+
+DesignatorListContent ::= (DesignatorListCommaElem) DesignatorListContent COMMA Designator
+						  |
+						  (DesignatorListComma) DesignatorListContent COMMA
+						  |
+						  (DesignatorListElem) Designator
+						  |
+						  (DesignatorListEmpty) /* epsilon */
+						  ;
+			
+					   	   	
+AssignmentStatementDesignator ::= (AssignmentDesignator) ASSIGN Designator
+; /* TODO: error handling */					   	
+
+
+
+Designator ::= (DesignatorSingle) IDENT:name
+			   |
+			   (DesignatorArray) IDENT:name LBRACKET Expr RSQUARE
+			   ;
+
+
+
+FunctionCall ::= (FunctionCall) FunctionName LPAREN OptionalMethodActualParams RPAREN
+;
+
+FunctionName ::= (FunctionName) Designator
+;
+
+OptionalMethodActualParams ::= (MethodActualParams) ActualParamList
+							   |
+							   (NoMethodActualParams) /* epsilon */
+							   ;
+
+ActualParamList ::= (ActualParamList) ActualParamList COMMA Expr
+					|
+					(ActualParamSingle) Expr
+					;							   							   
+
+
+
+Type ::= (Type) IDENT:typeName 
+;
+
+
+/* Grammar for operands, based on priority (Mulop > Addop) */
+Expr ::= (NegExpr) MINUS Term
+		 |
+		 (AddExpr) Expr:typeExpr Addop Term:t
 		 |
 		 (TermExpr) Term:t
 		 ;
 
-Term ::= (Term) Factor:t 
-;
+Term ::= (MulExpr) Term Mulop Factor:t
+		 | 
+		 (FactorTerm) Factor:t 
+		 ;
 
-/* Factor grammar */
 Factor ::= (NumberConst) NUMBER
 		   |
 		   (BoolConst) BOOL
@@ -284,44 +398,6 @@ Factor ::= (NumberConst) NUMBER
 		   (ExprFactor) LPAREN Expr RPAREN
 		   ;
 		   
-		   
-
-ActualPars ::= (Actuals) ActualParamList 
-			   | 
-			   (NoActuals) /* epsilon */ 
-			   ;
-		
-			   
-ActualParamList ::= (ActualParams) ActualParamList COMMA Expr
-					|
-					(ActualParam) Expr
-					;
-
-
-
-DesignatorStatement ::= (AssignmentStatement) Designator AssignmentStatement
-						|
-						(DesignatorStmtFunctionCall) FunctionCall
-						|
-						(IncrementDesignator) Designator INC
-						|
-						(DecrimentDesignator) Designator DEC
-						;
-						
-Designator ::= (Designator) IDENT:name
-;
-
-AssignmentStatement ::= (AssignmentExpr) ASSIGN Expr
-; /* TODO: error handling */
-					   	
-
-FunctionCall ::= (FunctionCall) FunctionName LPAREN OptionalMethodActualParams RPAREN
-;
-
-FunctionName ::= (FunctionName) Designator
-;
-
-OptionalMethodActualParams ::=
 
 
 Addop ::= (PlusOp) PLUS 

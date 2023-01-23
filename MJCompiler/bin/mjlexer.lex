@@ -47,9 +47,6 @@ import java_cup.runtime.Symbol;
 "new"		{ return new_symbol(sym.NEW, yytext()); }
 "const"		{ return new_symbol(sym.CONST, yytext()); }
 "void" 		{ return new_symbol(sym.VOID, yytext()); }
-"int"		{ return new_symbol(sym.INT, yytext()); }
-"char"		{ return new_symbol(sym.CHAR, yytext()); }
-"bool"		{ return new_symbol(sym.BOOL, yytext()); }
 
 "true"		{ return new_symbol(sym.BOOL, true); }
 "false"		{ return new_symbol(sym.BOOL, false); }
@@ -85,7 +82,7 @@ import java_cup.runtime.Symbol;
 "=" 		{ return new_symbol(sym.ASSIGN, yytext()); }
 
 ";" 		{ return new_symbol(sym.SEMI, yytext()); }
-":"			{ return new_symbol(sym.COL, yytext()); }	
+":"			{ return new_symbol(sym.COLON, yytext()); }	
 "," 		{ return new_symbol(sym.COMMA, yytext()); }
 
 "(" 		{ return new_symbol(sym.LPAREN, yytext()); }
