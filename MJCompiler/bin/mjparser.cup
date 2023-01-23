@@ -81,11 +81,11 @@ nonterminal ConstDeclStart, ConstList, ConstDeclaration, ConstType;
 nonterminal ProgVarDeclStart, ProgVarList, ProgVarDeclaration;
 nonterminal VarDeclStart, VarDeclList, VarList, VarName;
 nonterminal FormalParamList, FormalParamDecl, FormalParams; 
-nonterminal StatementList, Statement;
+nonterminal OptionalStatementList, StatementList, Statement;
 nonterminal IfConstruct, WhileConstruct, ControlCondition, Condition, ConditionTerm, ConditionFactor;
 nonterminal ForeachConstruct, ForeachDesignator;
 nonterminal DesignatorStatement;
-nonterminal AssignmentStatementExpr, AssignmentStatementDesignator, DesignatorListStart, DesignatorListContent;
+nonterminal AssignmentStatementExpr, AssignmentStatementDesignator, DesignatorListStart, DesignatorListContent, DesignatorDummy;
 nonterminal FunctionCall, FunctionName, OptionalMethodActualParams, ActualParams, ActualParamList;
 
 nonterminal Relop, Addop, Mulop; 	
@@ -122,7 +122,7 @@ ConstList ::= (ConstDeclarationList) ConstList COMMA ConstDeclaration
 			  (BaseConstDeclarationList) ConstDeclaration
 			  ;			  
 			  
-ConstDeclaration ::= (ConstDeclaration) IDENT EQUAL ConstType
+ConstDeclaration ::= (ConstDeclaration) IDENT ASSIGN ConstType
 ;
 
 ConstType ::= (ConstIntType) NUMBER
@@ -143,7 +143,7 @@ VarList ::= (VarDeclarationList) VarList COMMA VarName
 		    
 VarName ::= (VarNameSingle) IDENT:varName
 			|
-			(VarNameArray) IDEN:varName LBRACKET RBRACKET
+			(VarNameArray) IDENT:varName LBRACKET RBRACKET
 			;
 
 		     
@@ -163,11 +163,11 @@ ProgVarList ::= (ProgVarList) ProgVarList COMMA ProgVarDeclaration
 				(BaseProgVarDeclaration) ProgVarDeclaration
 				;
 				
-ProgVarDeclaration ::= (ProgVar) VarDeclaration
+ProgVarDeclaration ::= (ProgVar) VarName
 ;
 
 
-/* Method declaration (defintion) grammar */
+/* Method declaration (definition) grammar */
 MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDecl
 				   |
 				   (NoMethodDecl) /* epsilon */
@@ -197,9 +197,15 @@ FormalParamDecl ::= (FormalParamDecl) Type IDENT
 
 
 /* Statement grammar */
+OptionalStatementList ::= (StatementList) StatementList
+						  |
+						  (NoStatementList) /* epsilon */
+						  ;
+
+
 StatementList ::= (Statements) StatementList Statement 
 				  |
-				  (NoStatement) /* epsilon */
+				  (StatementSingle) Statement
 				  ;
 
 Statement ::= (DesignatorStatement) DesignatorStatement SEMI
@@ -226,7 +232,7 @@ Statement ::= (DesignatorStatement) DesignatorStatement SEMI
 			  |
 			  (IfElseStatement) IfConstruct ELSE Statement
 			  |
-			  (BlockStatement) LBRACKET StatementList RBRACKET
+			  (BlockStatement) LBRACKET OptionalStatementList RBRACKET
 			  ;
 
 			  
@@ -249,54 +255,20 @@ ControlCondition ::= (ControlCondition) LPAREN Condition RPAREN
 
 
 /* Condition hierarchy (AND > OR) */
-Condition ::= (ConditionOr) Condition OR CondTerm
+Condition ::= (ConditionOr) Condition OR ConditionTerm
 			  |
-			  (ConditionSingle) Condition
+			  (ConditionSingle) ConditionTerm
 			  ;
 			  
 ConditionTerm ::= (ConditionTermAnd) ConditionTerm AND 	ConditionFactor
 				  |
-				  (ConditionTermSingle) ConditionTerm
+				  (ConditionTermSingle) ConditionFactor
 				  ;
 				  
 ConditionFactor ::= (ConditionFactorRel) Expr Relop Expr
 					|
 					(ConditionFactorSingle) Expr
 					;
-
-/*
-Unmatched ::= (UnmatchedIf) IF Expr Statement | (UnmatchedIfElse) IF Expr Matched ELSE Unmatched;
-	
-				  
-Matched ::= (Assignment) Designator:dest EQUAL Expr:e SEMI 
-			  |
-			  (ErrAssignment) Designator EQUAL error SEMI
-			  {: parser.log.debug("Uspesan oporavak od greske pri dodeli vrednosti."); :}
-			  |
-			  (PrintStmt) PRINT LPAREN Expr RPAREN SEMI 
-			  |
-			  (ReturnExpr) RETURN Expr:t SEMI
-			  |
-			  (ReturnNoExpr) RETURN SEMI
-			  | 
-			  (MatchedIf) IF Expr Matched ELSE Matched
-			  |
-			  (ProcCall) Designator:func LPAREN ActualParams RPAREN SEMI
-			  ;
-*/
-			  
-/* Goes with matched
-ActualPars ::= (Actuals) ActualParamList 
-			   | 
-			   (NoActuals) /* epsilon */ 
-			   ;
-		
-			   
-ActualParamList ::= (ActualParams) ActualParamList COMMA Expr
-					|
-					(ActualParam) Expr
-					;
-*/
 		
 		   
 
@@ -330,9 +302,11 @@ DesignatorListContent ::= (DesignatorListCommaElem) DesignatorListContent COMMA 
 						  |
 						  (DesignatorListElem) Designator
 						  |
-						  (DesignatorListEmpty) /* epsilon */
+						  (DesignatorListEmpty) DesignatorDummy
 						  ;
 			
+DesignatorDummy ::= (DesignatorDummy) /* epsilon */
+;			
 					   	   	
 AssignmentStatementDesignator ::= (AssignmentDesignator) ASSIGN Designator
 ; /* TODO: error handling */					   	
@@ -341,7 +315,7 @@ AssignmentStatementDesignator ::= (AssignmentDesignator) ASSIGN Designator
 
 Designator ::= (DesignatorSingle) IDENT:name
 			   |
-			   (DesignatorArray) IDENT:name LBRACKET Expr RSQUARE
+			   (DesignatorArray) IDENT:name LBRACKET Expr RBRACKET
 			   ;
 
 
@@ -391,7 +365,7 @@ Factor ::= (NumberConst) NUMBER
 		   |
 		   (OperatorNew) NEW Type
 		   |
-		   (OperatorNewArr) NEW Type LBRACKET Expr RSQUARE
+		   (OperatorNewArr) NEW Type LBRACKET Expr RBRACKET
 		   |
 		   (FuncCall) FunctionCall
 		   |
