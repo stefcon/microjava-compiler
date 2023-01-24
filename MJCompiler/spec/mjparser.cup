@@ -90,7 +90,7 @@ nonterminal FunctionCall, FunctionName, OptionalMethodActualParams, ActualParams
 
 nonterminal Relop, Addop, Mulop; 	
 
-nonterminal rs.etf.pp1.symboltable.concepts.Obj Program, ProgName, Designator, MethodDecl, MethodTypeName; 
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Program, ProgName, Designator, MethodDecl, MethodTypeAndName; 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Term, Expr, Factor; 
 
 /* solves the IF condition ambiguity */
@@ -154,11 +154,11 @@ VarDeclList ::= (VarDeclarations) VarDeclList VarDeclStart
 
 			   
 			   
-ProgVarDeclStart ::= (ProgVarDeclaration) Type ProgVarList SEMI
+ProgVarDeclStart ::= (ProgVarDeclarationStart) Type ProgVarList SEMI
 ;
 
 
-ProgVarList ::= (ProgVarList) ProgVarList COMMA ProgVarDeclaration
+ProgVarList ::= (ProgVarListRec) ProgVarList COMMA ProgVarDeclaration
 				|
 				(BaseProgVarDeclaration) ProgVarDeclaration
 				;
@@ -173,16 +173,16 @@ MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDecl
 				   (NoMethodDecl) /* epsilon */
 				   ;
 
-MethodDecl ::= (MethodDecl) MethodTypeName LPAREN FormalParams RPAREN VarDeclList LBRACE StatementList RBRACE 
+MethodDecl ::= (MethodDecl) MethodTypeAndName LPAREN FormalParams RPAREN VarDeclList LBRACE StatementList RBRACE 
 ;
 
-MethodTypeName ::= (MethodTypeName) Type:retType IDENT:methName
+MethodTypeAndName ::= (MethodTypeName) Type:retType IDENT:methName
 				   |
 				   (MethodVoidName) VOID IDENT:methName
 				   ;
 				   
 
-FormalParams ::= (FormalParams) FormalParamList
+FormalParams ::= (OptFormalParams) FormalParamList
 			   	 |
 			     (NoFormalParam) /* epsilon */
 			     ;
@@ -197,7 +197,7 @@ FormalParamDecl ::= (FormalParamDecl) Type IDENT
 
 
 /* Statement grammar */
-OptionalStatementList ::= (StatementList) StatementList
+OptionalStatementList ::= (OptStatementList) StatementList
 						  |
 						  (NoStatementList) /* epsilon */
 						  ;
@@ -208,7 +208,7 @@ StatementList ::= (Statements) StatementList Statement
 				  (StatementSingle) Statement
 				  ;
 
-Statement ::= (DesignatorStatement) DesignatorStatement SEMI
+Statement ::= (DesignatorStatementStmt) DesignatorStatement SEMI
 			  |
 			  (WhileStatement) WhileConstruct
 			  |
@@ -232,7 +232,7 @@ Statement ::= (DesignatorStatement) DesignatorStatement SEMI
 			  |
 			  (IfElseStatement) IfConstruct ELSE Statement
 			  |
-			  (BlockStatement) LBRACKET OptionalStatementList RBRACKET
+			  (BlockStatement) LBRACE OptionalStatementList RBRACE
 			  ;
 
 			  
@@ -326,12 +326,12 @@ FunctionCall ::= (FunctionCall) FunctionName LPAREN OptionalMethodActualParams R
 FunctionName ::= (FunctionName) Designator
 ;
 
-OptionalMethodActualParams ::= (MethodActualParams) ActualParamList
+OptionalMethodActualParams ::= (OptMethodActualParams) ActualParamList
 							   |
 							   (NoMethodActualParams) /* epsilon */
 							   ;
 
-ActualParamList ::= (ActualParamList) ActualParamList COMMA Expr
+ActualParamList ::= (ActualParamListRec) ActualParamList COMMA Expr
 					|
 					(ActualParamSingle) Expr
 					;							   							   
@@ -392,9 +392,9 @@ Relop ::= (EqualsOp) EQ
 		  (LessEqualOp) LE
 		  ;
 		  
-Mulop ::= (MulOp) MUL
+Mulop ::= (MultiplyOp) MUL
 		  |
-		  (DivOp) DIV
+		  (DivisionOp) DIV
 		  |
-		  (ModOp) MOD
+		  (ModuloOp) MOD
 		  ;
