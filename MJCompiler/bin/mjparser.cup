@@ -77,12 +77,12 @@ terminal OR, AND;
 terminal CLASS, EXT;
 
 nonterminal ProgDeclList, MethodDeclList;
-nonterminal ConstDeclStart, ConstList, ConstDeclaration, ConstType;
-nonterminal ProgVarDeclStart, ProgVarList, ProgVarDeclaration;
+nonterminal ConstDeclStart, ConstList, ConstDeclaration;
+nonterminal ProgVarDeclStart, ProgVarType, ProgVarList, ProgVarDeclaration;
 nonterminal VarDeclStart, VarDeclList, VarList, VarName;
 nonterminal FormalParamList, FormalParamDecl, FormalParams; 
 nonterminal OptionalStatementList, StatementList, Statement;
-nonterminal IfConstruct, WhileConstruct, ControlCondition, Condition, ConditionTerm, ConditionFactor;
+nonterminal IfConstruct, WhileConstruct, ControlCondition;
 nonterminal ForeachConstruct, ForeachDesignator;
 nonterminal DesignatorStatement;
 nonterminal AssignmentStatementExpr, AssignmentStatementDesignator, DesignatorListStart, DesignatorListContent, DesignatorDummy;
@@ -91,7 +91,7 @@ nonterminal FunctionCall, FunctionName, OptionalMethodActualParams, ActualParams
 nonterminal Relop, Addop, Mulop; 	
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Program, ProgName, Designator, MethodDecl, MethodTypeAndName; 
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Term, Expr, Factor; 
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ConstType, Term, Expr, Factor, Condition, ConditionTerm, ConditionFactor; 
 
 /* solves the IF condition ambiguity */
 precedence left ELSE;
@@ -117,12 +117,14 @@ ProgDeclList ::= (ProgListConst) ProgDeclList ConstDeclStart
 ConstDeclStart ::= (ConstDeclarationStart) CONST Type:constType ConstList SEMI
 ;
 
+
+
 ConstList ::= (ConstDeclarationList) ConstList COMMA ConstDeclaration
 			  |
 			  (BaseConstDeclarationList) ConstDeclaration
 			  ;			  
 			  
-ConstDeclaration ::= (ConstDeclaration) IDENT ASSIGN ConstType
+ConstDeclaration ::= (ConstDeclaration) IDENT:constName ASSIGN ConstType
 ;
 
 ConstType ::= (ConstIntType) NUMBER
@@ -135,6 +137,7 @@ ConstType ::= (ConstIntType) NUMBER
 			   
 VarDeclStart ::= (VarDeclarationStart) Type VarList SEMI
 ;
+
 
 VarList ::= (VarDeclarationList) VarList COMMA VarName
 		    |
@@ -154,7 +157,11 @@ VarDeclList ::= (VarDeclarations) VarDeclList VarDeclStart
 
 			   
 			   
-ProgVarDeclStart ::= (ProgVarDeclarationStart) Type ProgVarList SEMI
+ProgVarDeclStart ::= (ProgVarDeclarationStart) ProgVarType ProgVarList SEMI
+;
+
+
+ProgVarType ::= (ProgVarType) Type
 ;
 
 

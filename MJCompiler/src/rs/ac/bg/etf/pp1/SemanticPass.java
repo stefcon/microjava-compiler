@@ -25,7 +25,7 @@ import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Struct;
 
 public class SemanticPass extends VisitorAdaptor {
-
+	
 	boolean errorDetected = false;
 	int printCallCount = 0;
 	Obj currentMethod = null;
