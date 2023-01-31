@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import java_cup.runtime.Symbol;
+import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.ast.SyntaxNode;
 import rs.ac.bg.etf.pp1.util.Log4JUtils;
 import rs.etf.pp1.mj.runtime.Code;
@@ -23,12 +24,19 @@ public class MJParserTest {
 	
 	public static void main(String[] args) throws Exception {
 		Logger log = Logger.getLogger(MJParserTest.class);
-		if (args.length < 2) {
-			log.error("Not enough arguments supplied! Usage: MJParser <source-file> <obj-file> ");
+		File sourceCode;
+		if (args.length == 2) {
+			sourceCode = new File(args[0]);
+		}
+		else if (args.length == 0) {
+			sourceCode = new File("program.mj");
+		}
+		else {
+			log.error("Not enough arguments supplied! Usage: MJParser <source-file> <obj-file> or no arguments at all!");
 			return;
 		}
 		
-		File sourceCode = new File(args[0]);
+		
 		if (!sourceCode.exists()) {
 			log.error("Source file [" + sourceCode.getAbsolutePath() + "] not found!");
 			return;
@@ -40,20 +48,28 @@ public class MJParserTest {
 			Yylex lexer = new Yylex(br);
 			MJParser p = new MJParser(lexer);
 	        Symbol s = p.parse();  //pocetak parsiranja
-	        SyntaxNode prog = (SyntaxNode)(s.value);
+	        Program prog = (Program)(s.value);
 	        
 			Tab.init(); // Universe scope
-			SemanticPass semanticCheck = new SemanticPass();
+			SemanticAnalyzer semanticCheck = new SemanticAnalyzer();
 			prog.traverseBottomUp(semanticCheck);
 			
-	        log.info("Print calls = " + semanticCheck.printCallCount);
+//	        log.info("Print calls = " + semanticCheck.printCallCount);
 	        Tab.dump();
 	        
+	        log.info("===============================");
+	        log.info(prog.toString(""));
+	        log.info("===============================");
+	        
 	        if (!p.errorDetected && semanticCheck.passed()) {
-	        	File objFile = new File(args[1]);
-	        	log.info("Generating bytecode file: " + objFile.getAbsolutePath());
-	        	if (objFile.exists())
-	        		objFile.delete();
+	        	log.info("Parsiranje uspesno zavrseno (bez generisanja, za sad)!");
+	        	
+//	        	File objFile;
+//	        	if (args.length > 0) objFile = new File(args[1]);
+//	        	else objFile = new File("program.obj");
+//	        	log.info("Generating bytecode file: " + objFile.getAbsolutePath());
+//	        	if (objFile.exists())
+//	        		objFile.delete();
 	        	
 	        	// Code generation... TODO: Dok se ne proveri semantic pass, ostaviti zakomentarisano
 //	        	CodeGenerator codeGenerator = new CodeGenerator();

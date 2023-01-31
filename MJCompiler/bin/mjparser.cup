@@ -79,6 +79,9 @@ terminal CLASS, EXT;
 nonterminal ProgDeclList, MethodDeclList;
 nonterminal ConstDeclStart, ConstList, ConstDeclaration;
 nonterminal ProgVarDeclStart, ProgVarType, ProgVarList, ProgVarDeclaration;
+
+nonterminal ProgClassDecl, ClassName, OptionalClassExtends, ClassMethodDecl, SuperClass;
+
 nonterminal VarDeclStart, VarDeclList, VarList, VarName;
 nonterminal FormalParamList, FormalParamDecl, FormalParams; 
 nonterminal OptionalStatementList, StatementList, Statement;
@@ -86,12 +89,12 @@ nonterminal IfConstruct, WhileConstruct, ControlCondition;
 nonterminal ForeachConstruct, ForeachDesignator;
 nonterminal DesignatorStatement;
 nonterminal AssignmentStatementExpr, AssignmentStatementDesignator, DesignatorListStart, DesignatorListContent, DesignatorDummy;
-nonterminal FunctionCall, FunctionName, OptionalMethodActualParams, ActualParams, ActualParamList;
+nonterminal FunctionName, OptionalMethodActualParams, ActualParam, ActualParamList;
 
 nonterminal Relop, Addop, Mulop; 	
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Program, ProgName, Designator, MethodDecl, MethodTypeAndName; 
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ConstType, Term, Expr, Factor, Condition, ConditionTerm, ConditionFactor; 
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ConstType, Term, Expr, Factor, FunctionCall, Condition, ConditionTerm, ConditionFactor; 
 
 /* solves the IF condition ambiguity */
 precedence left ELSE;
@@ -109,6 +112,8 @@ ProgName ::= (ProgName) IDENT:pName
 ProgDeclList ::= (ProgListConst) ProgDeclList ConstDeclStart 
 				 |
 				 (ProgListVar) ProgDeclList ProgVarDeclStart /* bilo je list */
+				 |
+				 (ProgListClass) ProgDeclList ProgClassDecl
 				 |
 				 (NoProgDeclList) /* epsilon */
 				 ;
@@ -174,6 +179,28 @@ ProgVarDeclaration ::= (ProgVar) VarName
 ;
 
 
+ProgClassDecl ::= (ClassDeclaration) ClassName OptionalClassExtends LBRACE VarDeclList ClassMethodDecl RBRACE
+;
+
+ClassName ::= (ClassName) CLASS IDENT:name
+;
+
+OptionalClassExtends ::= (ClassExtends) EXT SuperClass
+						 |
+						 (NoClassExtends) /* epsilon */
+						 ;
+
+SuperClass ::= (SuperClassIdent) IDENT:name
+			   |
+			   (SuperClassErr) error
+			   ;
+						 
+ClassMethodDecl ::= (ClassMethodDecl) LBRACE MethodDeclList RBRACE
+;
+
+
+
+
 /* Method declaration (definition) grammar */
 MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDecl
 				   |
@@ -199,8 +226,12 @@ FormalParamList ::= (FormalParamDecls) FormalParamList COMMA FormalParamDecl
 					(SingleFormalParamDecl) FormalParamDecl
 					;
 					
-FormalParamDecl ::= (FormalParamDecl) Type IDENT
-;
+FormalParamDecl ::= (FormalParamDeclSingle) Type:paramType IDENT:name
+					|
+					(FormalParamDeclArray) Type:paramType IDENT:name LBRACKET RBRACKET
+					|
+					error
+					;
 
 
 /* Statement grammar */
@@ -338,11 +369,13 @@ OptionalMethodActualParams ::= (OptMethodActualParams) ActualParamList
 							   (NoMethodActualParams) /* epsilon */
 							   ;
 
-ActualParamList ::= (ActualParamListRec) ActualParamList COMMA Expr
+ActualParamList ::= (ActualParamListRec) ActualParamList COMMA ActualParam
 					|
-					(ActualParamSingle) Expr
+					(ActualParamSingle) ActualParam
 					;							   							   
 
+ActualParam ::= (ActualParameter) Expr:exp
+;
 
 
 Type ::= (Type) IDENT:typeName 
@@ -357,24 +390,20 @@ Expr ::= (NegExpr) MINUS Term
 		 (TermExpr) Term:t
 		 ;
 
-Term ::= (MulExpr) Term Mulop Factor:t
+Term ::= (MulTerm) Term Mulop Factor:t
 		 | 
 		 (FactorTerm) Factor:t 
 		 ;
 
-Factor ::= (NumberConst) NUMBER
+Factor ::= (ConstFactor) ConstType
 		   |
-		   (BoolConst) BOOL
+		   (DesignatorFactor) Designator:d
 		   |
-		   (CharConst) CHAR
-		   |
-		   (Var) Designator:d
-		   |
-		   (OperatorNew) NEW Type
+		   (OperatorNewClass) NEW Type LPAREN OptionalMethodActualParams RPAREN
 		   |
 		   (OperatorNewArr) NEW Type LBRACKET Expr RBRACKET
 		   |
-		   (FuncCall) FunctionCall
+		   (FactorFuncCall) FunctionCall
 		   |
 		   (ExprFactor) LPAREN Expr RPAREN
 		   ;
