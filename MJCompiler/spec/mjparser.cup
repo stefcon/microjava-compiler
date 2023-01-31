@@ -354,6 +354,8 @@ AssignmentStatementDesignator ::= (AssignmentDesignator) ASSIGN Designator
 Designator ::= (DesignatorSingle) IDENT:name
 			   |
 			   (DesignatorArray) IDENT:name LBRACKET Expr RBRACKET
+			   |
+			   (DesignatorField) Designator DOT IDENT:rightField
 			   ;
 
 
