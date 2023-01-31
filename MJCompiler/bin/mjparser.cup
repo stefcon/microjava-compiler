@@ -298,7 +298,7 @@ Condition ::= (ConditionOr) Condition OR ConditionTerm
 			  (ConditionSingle) ConditionTerm
 			  ;
 			  
-ConditionTerm ::= (ConditionTermAnd) ConditionTerm AND 	ConditionFactor
+ConditionTerm ::= (ConditionTermAnd) ConditionTerm AND ConditionFactor
 				  |
 				  (ConditionTermSingle) ConditionFactor
 				  ;
