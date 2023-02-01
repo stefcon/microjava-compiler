@@ -88,13 +88,14 @@ nonterminal OptionalStatementList, StatementList, Statement;
 nonterminal IfConstruct, WhileConstruct, ControlCondition;
 nonterminal ForeachConstruct, ForeachDesignator;
 nonterminal DesignatorStatement;
-nonterminal AssignmentStatementExpr, AssignmentStatementDesignator, DesignatorListStart, DesignatorListContent, DesignatorDummy;
+nonterminal AssignmentStatementDesignator, DesignatorListStart, DesignatorListContent, DesignatorDummy;
 nonterminal FunctionName, OptionalMethodActualParams, ActualParam, ActualParamList;
 
 nonterminal Relop, Addop, Mulop; 	
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Program, ProgName, Designator, MethodDecl, MethodTypeAndName; 
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ConstType, Term, Expr, Factor, FunctionCall, Condition, ConditionTerm, ConditionFactor; 
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, ConstType, Term, Expr, AssignmentStatementExpr, Factor;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct FunctionCall, Condition, ConditionTerm, ConditionFactor; 
 
 /* solves the IF condition ambiguity */
 precedence left ELSE;
@@ -280,10 +281,10 @@ IfConstruct ::= (IfConstruct) IF ControlCondition Statement
 WhileConstruct ::= (WhileConstruct) WHILE ControlCondition Statement
 ;
 
-ForeachConstruct ::= (ForeachConstruct) ForeachDesignator DOT FOREACH LPAREN IDENT ARROW Statement RPAREN SEMI
+ForeachConstruct ::= (ForeachConstruct) ForeachDesignator FOREACH LPAREN IDENT ARROW Statement RPAREN SEMI
 ;
 
-ForeachDesignator ::= (ForeachDesignator) Designator
+ForeachDesignator ::= (ForeachDesignator) Designator DOT
 ;
 
 
@@ -311,7 +312,7 @@ ConditionFactor ::= (ConditionFactorRel) Expr Relop Expr
 		   
 
 /* Designator */
-DesignatorStatement ::= (AssignmentStatement) Designator AssignmentStatementExpr
+DesignatorStatement ::= (AssignmentStatement) AssignmentStatementExpr
 						|
 						(MultipleAssignmentStatement) DesignatorListStart AssignmentStatementDesignator
 						|
@@ -319,13 +320,13 @@ DesignatorStatement ::= (AssignmentStatement) Designator AssignmentStatementExpr
 						|
 						(IncrementDesignator) Designator INC
 						|
-						(DecrimentDesignator) Designator DEC
+						(DecrementDesignator) Designator DEC
 						;
 						
 
 
 
-AssignmentStatementExpr ::= (AssignmentExpr) ASSIGN Expr
+AssignmentStatementExpr ::= (AssignmentExpr) Designator ASSIGN Expr
 ; /* TODO: error handling */
 					   	
 
@@ -353,17 +354,17 @@ AssignmentStatementDesignator ::= (AssignmentDesignator) ASSIGN Designator
 
 Designator ::= (DesignatorSingle) IDENT:name
 			   |
-			   (DesignatorArray) IDENT:name LBRACKET Expr RBRACKET
+			   (DesignatorArray) Designator LBRACKET Expr RBRACKET
 			   |
 			   (DesignatorField) Designator DOT IDENT:rightField
 			   ;
 
 
 
-FunctionCall ::= (FunctionCall) FunctionName LPAREN OptionalMethodActualParams RPAREN
+FunctionCall ::= (FunctionCall) FunctionName OptionalMethodActualParams RPAREN
 ;
 
-FunctionName ::= (FunctionName) Designator
+FunctionName ::= (FunctionName) Designator LPAREN
 ;
 
 OptionalMethodActualParams ::= (OptMethodActualParams) ActualParamList
