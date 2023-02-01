@@ -88,8 +88,8 @@ nonterminal OptionalStatementList, StatementList, Statement;
 nonterminal IfConstruct, WhileConstruct, ControlCondition;
 nonterminal ForeachConstruct, ForeachDesignator;
 nonterminal DesignatorStatement;
-nonterminal AssignmentStatementDesignator, DesignatorListStart, DesignatorListContent, DesignatorDummy;
-nonterminal FunctionName, OptionalMethodActualParams, ActualParam, ActualParamList;
+nonterminal DesignatorListStart, DesignatorListContent, DesignatorDummy;
+nonterminal FunctionName, OptionalMethodActualParams, ActualParameter, ActualParamList;
 
 nonterminal Relop, Addop, Mulop; 	
 
@@ -314,42 +314,37 @@ ConditionFactor ::= (ConditionFactorRel) Expr Relop Expr
 /* Designator */
 DesignatorStatement ::= (AssignmentStatement) AssignmentStatementExpr
 						|
-						(MultipleAssignmentStatement) DesignatorListStart AssignmentStatementDesignator
+						(MultipleAssignmentStatement) DesignatorListStart Designator
 						|
 						(DesignatorStmtFunctionCall) FunctionCall
 						|
 						(IncrementDesignator) Designator INC
 						|
 						(DecrementDesignator) Designator DEC
+						|
+						error
 						;
 						
-
 
 
 AssignmentStatementExpr ::= (AssignmentExpr) Designator ASSIGN Expr
 ; /* TODO: error handling */
 					   	
 
-		
 					   	
-DesignatorListStart ::= (DesignatorListStart) LBRACKET DesignatorListContent RBRACKET
+DesignatorListStart ::= (DesignatorListStart) LBRACKET DesignatorListContent RBRACKET ASSIGN
 ;
 
-DesignatorListContent ::= (DesignatorListCommaElem) DesignatorListContent COMMA Designator
+DesignatorListContent ::= (DesignatorListCommaElem) DesignatorListContent COMMA DesignatorDummy
 						  |
-						  (DesignatorListComma) DesignatorListContent COMMA
-						  |
-						  (DesignatorListElem) Designator
-						  |
-						  (DesignatorListEmpty) DesignatorDummy
+						  (DesignatorListDummy) DesignatorDummy
 						  ;
 			
 DesignatorDummy ::= (DesignatorDummy) /* epsilon */
-;			
+					|
+					(DesignatorReal) Designator
+					;			
 					   	   	
-AssignmentStatementDesignator ::= (AssignmentDesignator) ASSIGN Designator
-; /* TODO: error handling */					   	
-
 
 
 Designator ::= (DesignatorSingle) IDENT:name
@@ -372,12 +367,12 @@ OptionalMethodActualParams ::= (OptMethodActualParams) ActualParamList
 							   (NoMethodActualParams) /* epsilon */
 							   ;
 
-ActualParamList ::= (ActualParamListRec) ActualParamList COMMA ActualParam
+ActualParamList ::= (ActualParamListRec) ActualParamList COMMA ActualParameter
 					|
-					(ActualParamSingle) ActualParam
+					(ActualParamSingle) ActualParameter
 					;							   							   
 
-ActualParam ::= (ActualParameter) Expr:exp
+ActualParameter ::= (ActualParameter) Expr:exp
 ;
 
 
