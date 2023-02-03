@@ -86,7 +86,8 @@ nonterminal ConstructorDeclList, ConstructorDeclStart, ConstructorDecl;
 nonterminal VarDeclStart, VarDeclList, VarList;
 nonterminal FormalParamList, FormalParamDecl, FormalParams; 
 nonterminal OptionalStatementList, StatementList, Statement;
-nonterminal IfConstruct, WhileConstruct, ControlCondition, IfKeyWord, WhileKeyWord;
+nonterminal IfConstruct, WhileConstruct, ControlCondition, IfKeyWord, WhileKeyWord, ElseKeyWord;
+nonterminal OrKeyWord, AndKeyWord;
 nonterminal ForeachConstruct, ForeachDesignator;
 nonterminal DesignatorStatement;
 nonterminal DesignatorListStart, DesignatorListContent, DesignatorDummy, DesignatorListStartDummy;
@@ -289,7 +290,7 @@ Statement ::= (DesignatorStatementStmt) DesignatorStatement SEMI
 			  |
 			  (IfStatement) IfConstruct
 			  |
-			  (IfElseStatement) IfConstruct ELSE Statement
+			  (IfElseStatement) IfConstruct ElseKeyWord Statement
 			  |
 			  (BlockStatement) LBRACE OptionalStatementList RBRACE
 			  ;
@@ -299,6 +300,9 @@ IfConstruct ::= (IfConstruct) IfKeyWord ControlCondition Statement
 ;			  
 
 IfKeyWord ::= (IfKeyWord) IF
+;
+
+ElseKeyWord ::= (ElseKeyWord) ELSE
 ;
 
 WhileConstruct ::= (WhileConstruct) WhileKeyWord ControlCondition Statement
@@ -323,12 +327,12 @@ ControlCondition ::= (ControlCondition) LPAREN Condition RPAREN
 
 
 /* Condition hierarchy (AND > OR) */
-Condition ::= (ConditionOr) Condition OR ConditionTerm
+Condition ::= (ConditionOr) Condition OrKeyWord ConditionTerm
 			  |
 			  (ConditionSingle) ConditionTerm
 			  ;
 			  
-ConditionTerm ::= (ConditionTermAnd) ConditionTerm AND ConditionFactor
+ConditionTerm ::= (ConditionTermAnd) ConditionTerm AndKeyWord ConditionFactor
 				  |
 				  (ConditionTermSingle) ConditionFactor
 				  ;
@@ -337,7 +341,13 @@ ConditionFactor ::= (ConditionFactorRel) Expr Relop Expr
 					|
 					(ConditionFactorSingle) Expr
 					;
-		
+
+OrKeyWord ::= (OrKeyWord) OR
+;
+
+AndKeyWord ::= (AndKeyWord) AND
+;
+
 		   
 
 /* Designator */

@@ -11,21 +11,44 @@ program MJProgram
 		z = new int[2];
 		z[0] = 30;
 		z[1] = 20;
-		//y = 2;
-		//x = y + 2;
-		//y = k() + 3;
-		//y++;
-		//print(y);
-		//print('a', 2);
-		//x--;
-		//print(x);
-		//print(2*3);
-		//print(6/2);
-		//print(cnst);
-		//print(z[1]);
-		[,x,] = z;
+		y = 2;
+		x = y + 2;
+		y = k() + 3;
+		
+		y++;
+		print(y);
+		
+		// Char
+		print('a', 2);
+		
+		x--;
+		print(x);
+		
+		// Mul op
+		print('t');
+		print(2*3);
+		print('d');
+		print(6/2);
+		print('m');
+		print(5%2);
+		
+		// Const
+		print(cnst);
+		
+		// Array
+		print(z[1]);
+		
+		// Designator list
+		[,x] = z;
 		
 		print(y);
+		print(x);
+		
+		// Bool
+		print(true);
+		
+		// Read
+		read(x);
 		print(x);
 		
 		return 0;

@@ -1,6 +1,7 @@
 package rs.ac.bg.etf.pp1;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Stack;
 import java.util.Iterator;
 import java.util.List;
@@ -222,15 +223,10 @@ public class CodeGenerator extends VisitorAdaptor {
 	private boolean shouldLoadDesignator(Designator designator) {
 		int designatorListElemRole = isPartOfDesignatorListStmt(designator);
 		if (inDesignatorList) {
-			// TODO: After simple designators!
-//			if (isPartOfDesignatorListStmt(designator) == 1) {
-//				// Left side, save node in a separate list for later visit
-//				designatorLeft.add(designator);
-//			}
-
 			return false;
 		} else if (inDesignatorList || designator.obj.getKind() == Obj.Meth
-				|| designator.getParent() instanceof DesignatorReal || designator.getParent() instanceof AssignmentExpr
+				|| designator.getParent() instanceof DesignatorReal 
+				|| designator.getParent() instanceof AssignmentExpr
 				|| designator.getParent() instanceof DesignatorStatementStmt
 				|| designator.getParent() instanceof ReadStatement) {
 			return false;
@@ -262,12 +258,12 @@ public class CodeGenerator extends VisitorAdaptor {
 		int i = -1;
 		for (DesignatorReal node : designatorLeft) {
 			++i;
-			// Won't detect if there are more elements 
+			// Won't detect if there are more elements
 			// if exception happens on the 'dummy' element!
 			if (node == null) {
 				continue;
 			}
-				
+
 			node.traverseBottomUp(this);
 			stmt.getDesignator().traverseBottomUp(this);
 			Code.loadConst(i);
@@ -363,6 +359,171 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 	}
 
+	/* Control statements */
+	private Stack<Set<Integer>> addressesToFixAfterElseOrUnmatched = new Stack<>();
+	private Stack<Set<Integer>> addressesToFixAfterIfMatched = new Stack<>();
+//	private Stack<Set<Integer>> addressesToFixAfterLoopStart = new Stack<>();
+
+	private Set<Integer> addressesToFixAfterOr = new HashSet<>();
+	private Set<Integer> addressesToFixAfterControlCondition = new HashSet<>();
+
+	private Stack<Integer> loopStartAddressStack = new Stack<>();
+	private Stack<Set<Integer>> addressesToFixAfterLoop = new Stack<>();
+
+	public void visit(IfKeyWord ifKeyWord) {
+		if (ifKeyWord.getParent().getParent() instanceof IfElseStatement) {
+			addressesToFixAfterIfMatched.push(new HashSet<>());
+		}
+		addressesToFixAfterElseOrUnmatched.push(new HashSet<>());
+	}
+
+	public void visit(ElseKeyWord elseKeyWord) {
+		Code.putJump(0);
+		addressesToFixAfterIfMatched.peek().add(Code.pc - 2);
+		addressesToFixAfterElseOrUnmatched.pop().forEach(Code::fixup);
+	}
+
+	public void visit(IfElseStatement ifStatement) {
+		addressesToFixAfterIfMatched.pop().forEach(Code::fixup);
+	}
+
+	public void visit(IfStatement ifStatement) {
+		addressesToFixAfterElseOrUnmatched.pop().forEach(Code::fixup);
+	}
+
+	public void visit(WhileKeyWord whileKeyWord) {
+		loopStartAddressStack.push(Code.pc);
+		addressesToFixAfterLoop.push(new HashSet<>());
+	}
+	
+	public void visit(WhileStatement whileStatement) {
+		Code.putJump(loopStartAddressStack.pop());
+		addressesToFixAfterLoop.pop().forEach(Code::fixup);
+	}
+
+	public void visit(ControlCondition condition) {
+		addressesToFixAfterControlCondition.forEach(Code::fixup);
+		addressesToFixAfterControlCondition = new HashSet<>();
+	}
+
+	public void visit(BreakStatement breakStatement) {
+		Code.putJump(0);
+		addressesToFixAfterLoop.peek().add(Code.pc - 2);
+	}
+
+	public void visit(ContinueStatement continueStatement) {
+		Code.put(Code.jmp);
+		Code.put2(loopStartAddressStack.peek());
+	}
+
+	public void visit(OrKeyWord orKeyWord) {
+		addressesToFixAfterOr.forEach(Code::fixup);
+		addressesToFixAfterOr = new HashSet<>();
+	}
+
+	/* Conditions */
+	public void visit(ConditionFactorSingle conditionFactor) {
+		// Placeholder variable and operation
+		Code.loadConst(1);
+		int relOp = Code.eq;
+		
+		processConditionFactor(relOp, conditionFactor);
+	}
+	
+	public void visit(ConditionFactorRel conditionFactor) {
+		Relop relopNode = conditionFactor.getRelop();
+		int relOp = determineRelOp(relopNode);
+		
+		processConditionFactor(relOp, conditionFactor);
+	}
+
+	// Condition's helpers
+	private void processConditionFactor(int relOp, ConditionFactor conditionFactor) {
+		ConditionTerm conditionTerm = getConditionTerm(conditionFactor);
+		ControlCondition controlCondition = getControlCondition(conditionTerm);
+		
+		if (isLastConditionFactor(conditionFactor) && isLastConditionTerm(conditionTerm)) {
+			// (x || Y)
+			if (isIfCondition(controlCondition)) {
+				Code.putFalseJump(relOp, 0);
+				addressesToFixAfterElseOrUnmatched.peek().add(Code.pc - 2);
+			} else if (isWhileCondition(controlCondition)) {
+				Code.putFalseJump(relOp, 0);
+				addressesToFixAfterLoop.peek().add(Code.pc - 2);
+			}
+		} 
+		else if (isLastConditionFactor(conditionFactor) && !isLastConditionTerm(conditionTerm)) {
+			// (X || y)
+			if (isIfCondition(controlCondition) || isWhileCondition(controlCondition)) {
+				Code.put(Code.jcc + relOp);
+				Code.put2(0);
+				addressesToFixAfterControlCondition.add(Code.pc - 2);
+			}
+		} 
+		else if (!isLastConditionFactor(conditionFactor) && isLastConditionTerm(conditionTerm)) {
+			// (x || Y && z);
+			Code.putFalseJump(relOp, 0);
+			
+			if (isIfCondition(controlCondition)) {
+				addressesToFixAfterElseOrUnmatched.peek().add(Code.pc - 2);
+			} else if (isWhileCondition(controlCondition)) {
+				addressesToFixAfterLoop.peek().add(Code.pc - 2);
+			}
+		}
+		else {
+			// (X && y || z)
+			Code.putFalseJump(relOp, 0);
+			addressesToFixAfterOr.add(Code.pc - 2);
+		}
+	}
+	
+	
+	private int determineRelOp(Relop relationOperator) {
+		if (relationOperator instanceof EqualsOp) {
+			return Code.eq;
+		} else if (relationOperator instanceof NotEqualsOp) {
+			return Code.ne;
+		} else if (relationOperator instanceof GreaterOp) {
+			return Code.gt;
+		} else if (relationOperator instanceof LessOp) {
+			return Code.lt;
+		} else if (relationOperator instanceof GreaterEqualOp) {
+			return Code.ge;
+		} else {
+			return Code.le;
+		}
+	}
+
+	private boolean isIfCondition(ControlCondition controlCondition) {
+		return controlCondition.getParent() instanceof IfConstruct;
+	}
+	
+	private boolean isWhileCondition(ControlCondition controlCondition) {
+		return controlCondition.getParent() instanceof WhileConstruct;
+	}
+
+	private ControlCondition getControlCondition(ConditionTerm cond) {
+		SyntaxNode node = cond.getParent();
+		while (!(node instanceof ControlCondition)) {
+			node = node.getParent();
+		}
+		return (ControlCondition) node;
+	}
+
+	private ConditionTerm getConditionTerm(ConditionFactor condFactor) {
+		return (ConditionTerm) condFactor.getParent();
+	}
+
+	private boolean isLastConditionFactor(ConditionFactor condFactor) {
+		return !(condFactor.getParent().getParent() instanceof ConditionTermAnd);
+
+	}
+
+	private boolean isLastConditionTerm(ConditionTerm condTerm) {
+		return !(condTerm.getParent().getParent() instanceof ConditionOr);
+	}
+
+	// TODO: Unused (for now)
 	@Override
 	public void visit(VarNameSingle VarDecl) {
 		varCount++;

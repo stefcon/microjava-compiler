@@ -26,10 +26,11 @@ public class MJParserTest {
 		Logger log = Logger.getLogger(MJParserTest.class);
 		File sourceCode;
 		if (args.length == 2) {
+			System.out.println("Uzimam argument!");
 			sourceCode = new File(args[0]);
 		}
 		else if (args.length == 0) {
-			sourceCode = new File("program.mj");
+			sourceCode = new File("program1.mj");
 		}
 		else {
 			log.error("Not enough arguments supplied! Usage: MJParser <source-file> <obj-file> or no arguments at all!");
@@ -65,7 +66,7 @@ public class MJParserTest {
 	        	log.info("Parsiranje uspesno zavrseno (bez generisanja, za sad)!");
 	        	
 	        	File objFile;
-	        	if (args.length > 0) objFile = new File(args[1]);
+	        	if (args.length > 0) { System.out.println("Uzimam arg!"); objFile = new File(args[1]);}
 	        	else objFile = new File("program.obj");
 	        	log.info("Generating bytecode file: " + objFile.getAbsolutePath());
 	        	if (objFile.exists())
