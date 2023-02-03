@@ -15,6 +15,8 @@ import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Struct;
 
 public class CodeGenerator extends VisitorAdaptor {
+	
+	public String MAIN = "main";
 
 	private int varCount;
 	private int paramCnt;
@@ -155,7 +157,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 	}
 
-	// New Operators
+	// New Operators TODO: Class
 	public void visit(OperatorNewArr newArr) {
 		// 0 - char, 1 - int, bool
 		int arrayType = 0;
@@ -298,7 +300,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	@Override
 	public void visit(MethodTypeName methodTypeName) {
-		if ("main".equalsIgnoreCase(methodTypeName.getMethName())) {
+		if (MAIN.equalsIgnoreCase(methodTypeName.getMethName())) {
 			Code.mainPc = mainPc = Code.pc;
 
 			// TODO: generating vtf
@@ -362,7 +364,6 @@ public class CodeGenerator extends VisitorAdaptor {
 	/* Control statements */
 	private Stack<Set<Integer>> addressesToFixAfterElseOrUnmatched = new Stack<>();
 	private Stack<Set<Integer>> addressesToFixAfterIfMatched = new Stack<>();
-//	private Stack<Set<Integer>> addressesToFixAfterLoopStart = new Stack<>();
 
 	private Set<Integer> addressesToFixAfterOr = new HashSet<>();
 	private Set<Integer> addressesToFixAfterControlCondition = new HashSet<>();
@@ -413,7 +414,44 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	public void visit(ContinueStatement continueStatement) {
 		Code.put(Code.jmp);
-		Code.put2(loopStartAddressStack.peek());
+		Code.put2(loopStartAddressStack.peek()-Code.pc+1);
+	}
+	
+	public void visit(ForeachKeyWord foreachKeyWord) {
+		// Putting temp index variable on stack
+		Code.put(Code.const_n);
+		addressesToFixAfterLoop.push(new HashSet<>());
+	}
+	
+	public void visit(ForIdent forIdent) {		
+		// Address that we are looping to
+		loopStartAddressStack.push(Code.pc);
+		
+		// Stack: ..., adr, ind
+		Code.put(Code.dup2); // ..., adr, ind, adr, ind
+		Code.put(Code.dup_x2); // ..., adr, ind, ind, adr, ind
+		Code.put(Code.pop); // ..., adr, ind, ind, adr
+		Code.put(Code.arraylength); // ..., adr, ind, ind, len
+		Code.putFalseJump(Code.lt, 0);
+		addressesToFixAfterLoop.peek().add(Code.pc - 2);
+		
+		// Preparing for new iteration
+		// ..., adr, ind
+		Code.put(Code.dup2); // ..., adr, ind, adr, ind
+		Code.put(Code.aload);
+		Code.store(forIdent.obj); // ..., adr, ind
+	}
+	
+	public void visit(ForeachConstruct foreachConstruct) {
+		Code.put(Code.const_1);
+		Code.put(Code.add); // Stack: ...,adr, ind + 1
+		
+		Code.putJump(loopStartAddressStack.pop());
+		addressesToFixAfterLoop.pop().forEach(Code::fixup);
+
+		// Empty stack
+		Code.put(Code.pop);
+		Code.put(Code.pop);
 	}
 
 	public void visit(OrKeyWord orKeyWord) {

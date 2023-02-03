@@ -87,7 +87,7 @@ nonterminal VarDeclStart, VarDeclList, VarList;
 nonterminal FormalParamList, FormalParamDecl, FormalParams; 
 nonterminal OptionalStatementList, StatementList, Statement;
 nonterminal IfConstruct, WhileConstruct, ControlCondition, IfKeyWord, WhileKeyWord, ElseKeyWord;
-nonterminal OrKeyWord, AndKeyWord;
+nonterminal OrKeyWord, AndKeyWord, ForeachKeyWord;
 nonterminal ForeachConstruct, ForeachDesignator;
 nonterminal DesignatorStatement;
 nonterminal DesignatorListStart, DesignatorListContent, DesignatorDummy, DesignatorListStartDummy;
@@ -311,7 +311,10 @@ WhileConstruct ::= (WhileConstruct) WhileKeyWord ControlCondition Statement
 WhileKeyWord ::= (WhileKeyWord) WHILE
 ;
 
-ForeachConstruct ::= (ForeachConstruct) ForeachDesignator FOREACH LPAREN ForIdent ARROW Statement RPAREN SEMI
+ForeachConstruct ::= (ForeachConstruct) ForeachDesignator ForeachKeyWord LPAREN ForIdent ARROW Statement RPAREN SEMI
+;
+
+ForeachKeyWord ::= (ForeachKeyWord) FOREACH
 ;
 
 ForIdent ::= (ForIdent) IDENT:name
