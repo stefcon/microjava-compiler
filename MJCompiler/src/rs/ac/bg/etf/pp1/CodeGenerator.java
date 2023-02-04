@@ -76,7 +76,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		generateChrAndOrdCode();
 	}
 
-	/* Class scopes */
+	/* TVF table */
 	// TODO:
 	private void addTvfConstant(int value, int num) {
 		Code.loadConst(value);
@@ -85,6 +85,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 	
 	private void generateTVF() {
+		// Code.dataSize has already been updated in during semantic analysis
 		int cursor = Code.dataSize;
 		
 		for (Obj cls : classList) {
@@ -104,6 +105,14 @@ public class CodeGenerator extends VisitorAdaptor {
 			addTvfConstant(-2, cursor++);
 		}
 		Code.dataSize = cursor;
+	}
+	/* Class declaration */
+	public void visit(ClassName className) {
+		insideClass = true;
+	}
+	
+	public void visit(ClassDeclaration classDeclaration) {
+//		Struct classType = classDeclaration.getClassName()
 	}
 
 	/* Print and read */
