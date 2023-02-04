@@ -12,6 +12,8 @@
 				<exclude name="SemanticAnalyzer.java"/>
 				<exclude name="CodeGenerator.java"/>
 				<exclude name="CounterVisitor.java"/>
+				<exclude name="ConstructorDescriptor.java"/>
+				<exclude name="DumpSymbolTableVisitorExt.java"/>
 			</fileset>
 		</delete>
 		<delete>

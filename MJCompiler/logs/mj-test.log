@@ -1,263 +1,322 @@
-INFO  19:42:15,584 - Compiling source file: C:\Users\stefc\Fakultet_lokal\PP1\pp1lab.templateAST\workspace\MJCompiler\test\program1.mj
-INFO  19:42:15,696 - #2 program
-INFO  19:42:15,696 - #30 MJProgram
-INFO  19:42:15,696 - #30 int
-INFO  19:42:15,699 - #30 x
-INFO  19:42:15,701 - #10 ;
-INFO  19:42:15,701 - #30 int
-INFO  19:42:15,701 - #30 y
-INFO  19:42:15,701 - #11 ,
-INFO  19:42:15,701 - #30 z
-INFO  19:42:15,702 - #4 [
-INFO  19:42:15,702 - #5 ]
-INFO  19:42:15,702 - #10 ;
-INFO  19:42:15,702 - #26 const
-INFO  19:42:15,702 - #30 int
-INFO  19:42:15,702 - #30 cnst
-INFO  19:42:15,702 - #3 =
-INFO  19:42:15,702 - #27 9
-INFO  19:42:15,702 - #10 ;
-INFO  19:42:15,703 - #6 {
-INFO  19:42:15,703 - #30 int
-INFO  19:42:15,705 - #30 k
-INFO  19:42:15,705 - #8 (
-INFO  19:42:15,705 - #9 )
-INFO  19:42:15,706 - #30 int
-INFO  19:42:15,707 - #30 c
-INFO  19:42:15,707 - #10 ;
-INFO  19:42:15,708 - #6 {
-INFO  19:42:15,708 - #30 c
-INFO  19:42:15,708 - #3 =
-INFO  19:42:15,708 - #27 1
-INFO  19:42:15,708 - #10 ;
-INFO  19:42:15,708 - #25 return
-INFO  19:42:15,709 - #30 c
-INFO  19:42:15,709 - #31 +
-INFO  19:42:15,709 - #27 2
-INFO  19:42:15,711 - #10 ;
-INFO  19:42:15,711 - #7 }
-INFO  19:42:15,711 - #30 int
-INFO  19:42:15,713 - #30 g
-INFO  19:42:15,713 - #8 (
-INFO  19:42:15,713 - #30 int
-INFO  19:42:15,713 - #30 op
-INFO  19:42:15,713 - #11 ,
-INFO  19:42:15,714 - #30 int
-INFO  19:42:15,714 - #30 mul
-INFO  19:42:15,714 - #9 )
-INFO  19:42:15,714 - #6 {
-INFO  19:42:15,714 - #25 return
-INFO  19:42:15,714 - #30 op
-INFO  19:42:15,714 - #35 *
-INFO  19:42:15,714 - #30 mul
-INFO  19:42:15,716 - #10 ;
-INFO  19:42:15,717 - #7 }
-INFO  19:42:15,717 - #30 int
-INFO  19:42:15,717 - #30 main
-INFO  19:42:15,717 - #8 (
-INFO  19:42:15,717 - #9 )
-INFO  19:42:15,717 - #6 {
-INFO  19:42:15,717 - #30 x
-INFO  19:42:15,717 - #3 =
-INFO  19:42:15,717 - #27 0
-INFO  19:42:15,717 - #10 ;
-INFO  19:42:15,717 - #30 y
-INFO  19:42:15,717 - #3 =
-INFO  19:42:15,717 - #27 0
-INFO  19:42:15,718 - #10 ;
-INFO  19:42:15,718 - #30 z
-INFO  19:42:15,718 - #3 =
-INFO  19:42:15,718 - #17 new
-INFO  19:42:15,718 - #30 int
-INFO  19:42:15,718 - #4 [
-INFO  19:42:15,718 - #27 3
-INFO  19:42:15,718 - #5 ]
-INFO  19:42:15,718 - #10 ;
-INFO  19:42:15,718 - #30 z
-INFO  19:42:15,718 - #4 [
-INFO  19:42:15,718 - #27 0
-INFO  19:42:15,718 - #5 ]
-INFO  19:42:15,718 - #3 =
-INFO  19:42:15,718 - #27 5
-INFO  19:42:15,719 - #10 ;
-INFO  19:42:15,719 - #30 z
-INFO  19:42:15,719 - #4 [
-INFO  19:42:15,719 - #27 1
-INFO  19:42:15,719 - #5 ]
-INFO  19:42:15,719 - #3 =
-INFO  19:42:15,719 - #27 4
-INFO  19:42:15,719 - #10 ;
-INFO  19:42:15,719 - #30 z
-INFO  19:42:15,719 - #4 [
-INFO  19:42:15,719 - #27 2
-INFO  19:42:15,719 - #5 ]
-INFO  19:42:15,720 - #3 =
-INFO  19:42:15,720 - #27 10
-INFO  19:42:15,720 - #10 ;
-INFO  19:42:15,720 - #30 z
-INFO  19:42:15,720 - #12 .
-INFO  19:42:15,720 - #20 foreach
-INFO  19:42:15,721 - #8 (
-INFO  19:42:15,722 - #30 x
-INFO  19:42:15,723 - #14 =>
-INFO  19:42:15,724 - #15 print
-INFO  19:42:15,724 - #8 (
-INFO  19:42:15,724 - #30 x
-INFO  19:42:15,724 - #9 )
-INFO  19:42:15,724 - #10 ;
-INFO  19:42:15,724 - #9 )
-INFO  19:42:15,724 - #10 ;
-INFO  19:42:15,724 - #30 x
-INFO  19:42:15,725 - #3 =
-INFO  19:42:15,726 - #27 0
-INFO  19:42:15,726 - #10 ;
-INFO  19:42:15,726 - #19 while
-INFO  19:42:15,726 - #8 (
-INFO  19:42:15,727 - #30 x
-INFO  19:42:15,728 - #42 <
-INFO  19:42:15,728 - #27 2
-INFO  19:42:15,730 - #9 )
-INFO  19:42:15,730 - #6 {
-INFO  19:42:15,731 - #15 print
-INFO  19:42:15,731 - #8 (
-INFO  19:42:15,732 - #30 x
-INFO  19:42:15,732 - #9 )
-INFO  19:42:15,732 - #10 ;
-INFO  19:42:15,732 - #30 x
-INFO  19:42:15,732 - #33 ++
-INFO  19:42:15,732 - #10 ;
-INFO  19:42:15,732 - #21 if
-INFO  19:42:15,732 - #8 (
-INFO  19:42:15,733 - #30 x
-INFO  19:42:15,733 - #38 ==
-INFO  19:42:15,733 - #27 2
-INFO  19:42:15,735 - #9 )
-INFO  19:42:15,735 - #24 break
-INFO  19:42:15,735 - #10 ;
-INFO  19:42:15,735 - #23 continue
-INFO  19:42:15,738 - #10 ;
-INFO  19:42:15,738 - #30 y
-INFO  19:42:15,739 - #34 --
-INFO  19:42:15,739 - #10 ;
-INFO  19:42:15,739 - #7 }
-INFO  19:42:15,739 - #15 print
-INFO  19:42:15,741 - #8 (
-INFO  19:42:15,741 - #30 y
-INFO  19:42:15,741 - #9 )
-INFO  19:42:15,741 - #10 ;
-INFO  19:42:15,741 - #15 print
-INFO  19:42:15,741 - #8 (
-INFO  19:42:15,741 - #30 x
-INFO  19:42:15,741 - #9 )
-INFO  19:42:15,741 - #10 ;
-INFO  19:42:15,741 - #21 if
-INFO  19:42:15,741 - #8 (
-INFO  19:42:15,741 - #30 x
-INFO  19:42:15,741 - #39 !=
-INFO  19:42:15,742 - #27 2
-INFO  19:42:15,743 - #44 ||
-INFO  19:42:15,743 - #29 true
-INFO  19:42:15,745 - #45 &&
-INFO  19:42:15,745 - #30 x
-INFO  19:42:15,747 - #42 <
-INFO  19:42:15,747 - #27 3
-INFO  19:42:15,747 - #9 )
-INFO  19:42:15,747 - #6 {
-INFO  19:42:15,747 - #15 print
-INFO  19:42:15,747 - #8 (
-INFO  19:42:15,748 - #28 y
-INFO  19:42:15,748 - #9 )
-INFO  19:42:15,748 - #10 ;
-INFO  19:42:15,748 - #7 }
-INFO  19:42:15,748 - #22 else
-INFO  19:42:15,748 - #6 {
-INFO  19:42:15,749 - #15 print
-INFO  19:42:15,749 - #8 (
-INFO  19:42:15,749 - #28 n
-INFO  19:42:15,749 - #9 )
-INFO  19:42:15,749 - #10 ;
-INFO  19:42:15,749 - #7 }
-INFO  19:42:15,749 - #15 print
-INFO  19:42:15,749 - #8 (
-INFO  19:42:15,749 - #30 g
-INFO  19:42:15,749 - #8 (
-INFO  19:42:15,749 - #27 2
-INFO  19:42:15,750 - #11 ,
-INFO  19:42:15,751 - #27 4
-INFO  19:42:15,751 - #9 )
-INFO  19:42:15,752 - #9 )
-INFO  19:42:15,752 - #10 ;
-INFO  19:42:15,754 - #25 return
-INFO  19:42:15,754 - #27 0
-INFO  19:42:15,754 - #10 ;
-INFO  19:42:15,754 - #7 }
-INFO  19:42:15,754 - #7 }
-INFO  19:42:15,765 - Definicija promenljive x na liniji 2
-INFO  19:42:15,765 - Definicija promenljive y na liniji 2
-INFO  19:42:15,765 - Definicija niz promenljive z na liniji 2
-INFO  19:42:15,765 - Definisana const na liniji 2
-INFO  19:42:15,765 - Definicija promenljive c na liniji 5
-INFO  19:42:15,767 - ===============================
-INFO  19:42:15,769 - Program(
+INFO  04:03:55,747 - Compiling source file: C:\Users\stefc\Fakultet_lokal\PP1\pp1lab.templateAST\workspace\MJCompiler\test\program1.mj
+INFO  04:03:55,831 - #2 program
+INFO  04:03:55,831 - #30 MJProgram
+INFO  04:03:55,831 - #30 int
+INFO  04:03:55,832 - #30 x
+INFO  04:03:55,834 - #10 ;
+INFO  04:03:55,834 - #30 int
+INFO  04:03:55,834 - #30 y
+INFO  04:03:55,834 - #11 ,
+INFO  04:03:55,834 - #30 z
+INFO  04:03:55,834 - #4 [
+INFO  04:03:55,834 - #5 ]
+INFO  04:03:55,834 - #10 ;
+INFO  04:03:55,835 - #26 const
+INFO  04:03:55,835 - #30 int
+INFO  04:03:55,835 - #30 cnst
+INFO  04:03:55,835 - #3 =
+INFO  04:03:55,835 - #27 9
+INFO  04:03:55,835 - #10 ;
+INFO  04:03:55,836 - #46 class
+INFO  04:03:55,836 - #30 B
+INFO  04:03:55,836 - #6 {
+INFO  04:03:55,838 - #7 }
+INFO  04:03:55,838 - #46 class
+INFO  04:03:55,840 - #30 C
+INFO  04:03:55,840 - #6 {
+INFO  04:03:55,840 - #6 {
+INFO  04:03:55,840 - #30 C
+INFO  04:03:55,840 - #8 (
+INFO  04:03:55,841 - #9 )
+INFO  04:03:55,841 - #6 {
+INFO  04:03:55,842 - #7 }
+INFO  04:03:55,843 - #7 }
+INFO  04:03:55,844 - #7 }
+INFO  04:03:55,844 - #6 {
+INFO  04:03:55,844 - #30 int
+INFO  04:03:55,844 - #30 k
+INFO  04:03:55,844 - #8 (
+INFO  04:03:55,844 - #9 )
+INFO  04:03:55,844 - #30 int
+INFO  04:03:55,845 - #30 c
+INFO  04:03:55,845 - #10 ;
+INFO  04:03:55,845 - #6 {
+INFO  04:03:55,845 - #30 c
+INFO  04:03:55,845 - #3 =
+INFO  04:03:55,845 - #27 1
+INFO  04:03:55,845 - #10 ;
+INFO  04:03:55,846 - #25 return
+INFO  04:03:55,846 - #30 c
+INFO  04:03:55,846 - #31 +
+INFO  04:03:55,846 - #27 2
+INFO  04:03:55,848 - #10 ;
+INFO  04:03:55,848 - #7 }
+INFO  04:03:55,848 - #30 int
+INFO  04:03:55,849 - #30 g
+INFO  04:03:55,849 - #8 (
+INFO  04:03:55,849 - #30 int
+INFO  04:03:55,849 - #30 op
+INFO  04:03:55,849 - #11 ,
+INFO  04:03:55,849 - #30 int
+INFO  04:03:55,849 - #30 mul
+INFO  04:03:55,850 - #9 )
+INFO  04:03:55,850 - #6 {
+INFO  04:03:55,850 - #25 return
+INFO  04:03:55,850 - #30 op
+INFO  04:03:55,850 - #35 *
+INFO  04:03:55,850 - #30 mul
+INFO  04:03:55,851 - #10 ;
+INFO  04:03:55,851 - #7 }
+INFO  04:03:55,851 - #30 int
+INFO  04:03:55,851 - #30 main
+INFO  04:03:55,851 - #8 (
+INFO  04:03:55,851 - #9 )
+INFO  04:03:55,851 - #6 {
+INFO  04:03:55,851 - #30 x
+INFO  04:03:55,851 - #3 =
+INFO  04:03:55,851 - #27 0
+INFO  04:03:55,851 - #10 ;
+INFO  04:03:55,852 - #30 y
+INFO  04:03:55,852 - #3 =
+INFO  04:03:55,852 - #27 0
+INFO  04:03:55,852 - #10 ;
+INFO  04:03:55,852 - #30 z
+INFO  04:03:55,852 - #3 =
+INFO  04:03:55,852 - #17 new
+INFO  04:03:55,852 - #30 int
+INFO  04:03:55,852 - #4 [
+INFO  04:03:55,852 - #27 3
+INFO  04:03:55,852 - #5 ]
+INFO  04:03:55,852 - #10 ;
+INFO  04:03:55,852 - #30 z
+INFO  04:03:55,852 - #4 [
+INFO  04:03:55,852 - #27 0
+INFO  04:03:55,852 - #5 ]
+INFO  04:03:55,853 - #3 =
+INFO  04:03:55,853 - #27 5
+INFO  04:03:55,853 - #10 ;
+INFO  04:03:55,853 - #30 z
+INFO  04:03:55,853 - #4 [
+INFO  04:03:55,853 - #27 1
+INFO  04:03:55,853 - #5 ]
+INFO  04:03:55,853 - #3 =
+INFO  04:03:55,853 - #27 4
+INFO  04:03:55,853 - #10 ;
+INFO  04:03:55,854 - #30 z
+INFO  04:03:55,854 - #4 [
+INFO  04:03:55,854 - #27 2
+INFO  04:03:55,854 - #5 ]
+INFO  04:03:55,854 - #3 =
+INFO  04:03:55,854 - #27 10
+INFO  04:03:55,854 - #10 ;
+INFO  04:03:55,854 - #30 z
+INFO  04:03:55,854 - #12 .
+INFO  04:03:55,854 - #20 foreach
+INFO  04:03:55,855 - #8 (
+INFO  04:03:55,855 - #30 x
+INFO  04:03:55,856 - #14 =>
+INFO  04:03:55,856 - #15 print
+INFO  04:03:55,856 - #8 (
+INFO  04:03:55,856 - #30 x
+INFO  04:03:55,856 - #9 )
+INFO  04:03:55,857 - #10 ;
+INFO  04:03:55,857 - #9 )
+INFO  04:03:55,857 - #10 ;
+INFO  04:03:55,857 - #30 x
+INFO  04:03:55,858 - #3 =
+INFO  04:03:55,858 - #27 0
+INFO  04:03:55,858 - #10 ;
+INFO  04:03:55,858 - #19 while
+INFO  04:03:55,858 - #8 (
+INFO  04:03:55,860 - #30 x
+INFO  04:03:55,861 - #42 <
+INFO  04:03:55,861 - #27 2
+INFO  04:03:55,862 - #9 )
+INFO  04:03:55,862 - #6 {
+INFO  04:03:55,863 - #15 print
+INFO  04:03:55,863 - #8 (
+INFO  04:03:55,863 - #30 x
+INFO  04:03:55,864 - #9 )
+INFO  04:03:55,864 - #10 ;
+INFO  04:03:55,864 - #30 x
+INFO  04:03:55,864 - #33 ++
+INFO  04:03:55,864 - #10 ;
+INFO  04:03:55,864 - #21 if
+INFO  04:03:55,864 - #8 (
+INFO  04:03:55,865 - #30 x
+INFO  04:03:55,865 - #38 ==
+INFO  04:03:55,865 - #27 2
+INFO  04:03:55,866 - #9 )
+INFO  04:03:55,866 - #24 break
+INFO  04:03:55,866 - #10 ;
+INFO  04:03:55,866 - #23 continue
+INFO  04:03:55,867 - #10 ;
+INFO  04:03:55,868 - #30 y
+INFO  04:03:55,868 - #34 --
+INFO  04:03:55,868 - #10 ;
+INFO  04:03:55,868 - #7 }
+INFO  04:03:55,868 - #15 print
+INFO  04:03:55,869 - #8 (
+INFO  04:03:55,869 - #30 y
+INFO  04:03:55,870 - #9 )
+INFO  04:03:55,870 - #10 ;
+INFO  04:03:55,870 - #15 print
+INFO  04:03:55,870 - #8 (
+INFO  04:03:55,870 - #30 x
+INFO  04:03:55,870 - #9 )
+INFO  04:03:55,870 - #10 ;
+INFO  04:03:55,870 - #21 if
+INFO  04:03:55,870 - #8 (
+INFO  04:03:55,870 - #30 x
+INFO  04:03:55,870 - #39 !=
+INFO  04:03:55,870 - #27 2
+INFO  04:03:55,871 - #44 ||
+INFO  04:03:55,871 - #29 true
+INFO  04:03:55,872 - #45 &&
+INFO  04:03:55,872 - #30 x
+INFO  04:03:55,872 - #42 <
+INFO  04:03:55,873 - #27 3
+INFO  04:03:55,873 - #9 )
+INFO  04:03:55,873 - #6 {
+INFO  04:03:55,873 - #15 print
+INFO  04:03:55,873 - #8 (
+INFO  04:03:55,873 - #28 y
+INFO  04:03:55,873 - #9 )
+INFO  04:03:55,873 - #10 ;
+INFO  04:03:55,873 - #7 }
+INFO  04:03:55,873 - #22 else
+INFO  04:03:55,873 - #6 {
+INFO  04:03:55,875 - #15 print
+INFO  04:03:55,875 - #8 (
+INFO  04:03:55,875 - #28 n
+INFO  04:03:55,875 - #9 )
+INFO  04:03:55,875 - #10 ;
+INFO  04:03:55,875 - #7 }
+INFO  04:03:55,875 - #15 print
+INFO  04:03:55,876 - #8 (
+INFO  04:03:55,876 - #30 g
+INFO  04:03:55,876 - #8 (
+INFO  04:03:55,876 - #27 2
+INFO  04:03:55,877 - #11 ,
+INFO  04:03:55,879 - #27 4
+INFO  04:03:55,879 - #9 )
+INFO  04:03:55,879 - #9 )
+INFO  04:03:55,880 - #10 ;
+INFO  04:03:55,880 - #25 return
+INFO  04:03:55,880 - #27 0
+INFO  04:03:55,880 - #10 ;
+INFO  04:03:55,880 - #7 }
+INFO  04:03:55,880 - #7 }
+INFO  04:03:55,888 - Definicija promenljive x na liniji 2
+INFO  04:03:55,888 - Definicija promenljive y na liniji 2
+INFO  04:03:55,888 - Definicija niz promenljive z na liniji 2
+INFO  04:03:55,888 - Definisana const na liniji 2
+INFO  04:03:55,888 - Dodat je podrazumevani konstruktor za klasu B na liniji 4
+INFO  04:03:55,890 - Definicija promenljive c na liniji 14
+INFO  04:03:55,892 - ===============================
+INFO  04:03:55,895 - Program(
   ProgName(
    MJProgram
   ) [ProgName]
-  ProgListConst(
-    ProgListVar(
-      ProgListVar(
-        NoProgDeclList(
-        ) [NoProgDeclList]
-        ProgVarDeclarationStart(
-          ProgVarType(
-            Type(
-             int
-            ) [Type]
-          ) [ProgVarType]
-          BaseProgVarDeclaration(
-            ProgVar(
-              VarNameSingle(
-               x
-              ) [VarNameSingle]
-            ) [ProgVar]
-          ) [BaseProgVarDeclaration]
-        ) [ProgVarDeclarationStart]
-      ) [ProgListVar]
-      ProgVarDeclarationStart(
-        ProgVarType(
+  ProgListClass(
+    ProgListClass(
+      ProgListConst(
+        ProgListVar(
+          ProgListVar(
+            NoProgDeclList(
+            ) [NoProgDeclList]
+            ProgVarDeclarationStart(
+              ProgVarType(
+                Type(
+                 int
+                ) [Type]
+              ) [ProgVarType]
+              BaseProgVarDeclaration(
+                ProgVar(
+                  VarNameSingle(
+                   x
+                  ) [VarNameSingle]
+                ) [ProgVar]
+              ) [BaseProgVarDeclaration]
+            ) [ProgVarDeclarationStart]
+          ) [ProgListVar]
+          ProgVarDeclarationStart(
+            ProgVarType(
+              Type(
+               int
+              ) [Type]
+            ) [ProgVarType]
+            ProgVarListRec(
+              BaseProgVarDeclaration(
+                ProgVar(
+                  VarNameSingle(
+                   y
+                  ) [VarNameSingle]
+                ) [ProgVar]
+              ) [BaseProgVarDeclaration]
+              ProgVar(
+                VarNameArray(
+                 z
+                ) [VarNameArray]
+              ) [ProgVar]
+            ) [ProgVarListRec]
+          ) [ProgVarDeclarationStart]
+        ) [ProgListVar]
+        ConstDeclarationStart(
           Type(
            int
           ) [Type]
-        ) [ProgVarType]
-        ProgVarListRec(
-          BaseProgVarDeclaration(
-            ProgVar(
-              VarNameSingle(
-               y
-              ) [VarNameSingle]
-            ) [ProgVar]
-          ) [BaseProgVarDeclaration]
-          ProgVar(
-            VarNameArray(
-             z
-            ) [VarNameArray]
-          ) [ProgVar]
-        ) [ProgVarListRec]
-      ) [ProgVarDeclarationStart]
-    ) [ProgListVar]
-    ConstDeclarationStart(
-      Type(
-       int
-      ) [Type]
-      BaseConstDeclarationList(
-        ConstDeclaration(
-         cnst
-          ConstIntType(
-           9
-          ) [ConstIntType]
-        ) [ConstDeclaration]
-      ) [BaseConstDeclarationList]
-    ) [ConstDeclarationStart]
-  ) [ProgListConst]
+          BaseConstDeclarationList(
+            ConstDeclaration(
+             cnst
+              ConstIntType(
+               9
+              ) [ConstIntType]
+            ) [ConstDeclaration]
+          ) [BaseConstDeclarationList]
+        ) [ConstDeclarationStart]
+      ) [ProgListConst]
+      ClassDeclaration(
+        ClassName(
+         B
+        ) [ClassName]
+        NoClassExtends(
+        ) [NoClassExtends]
+        NoVarDecl(
+        ) [NoVarDecl]
+        NoClassMethodDecl(
+        ) [NoClassMethodDecl]
+      ) [ClassDeclaration]
+    ) [ProgListClass]
+    ClassDeclaration(
+      ClassName(
+       C
+      ) [ClassName]
+      NoClassExtends(
+      ) [NoClassExtends]
+      NoVarDecl(
+      ) [NoVarDecl]
+      ClassMethodDecl(
+        ConstructorDeclarationList(
+          ConstructorDeclarationEmpty(
+          ) [ConstructorDeclarationEmpty]
+          ConstructorDeclarationInst(
+            ConstructorDeclarationStart(
+             C
+            ) [ConstructorDeclarationStart]
+            NoFormalParam(
+            ) [NoFormalParam]
+            NoVarDecl(
+            ) [NoVarDecl]
+            NoStatementList(
+            ) [NoStatementList]
+          ) [ConstructorDeclarationInst]
+        ) [ConstructorDeclarationList]
+        NoMethodDeclList(
+        ) [NoMethodDeclList]
+      ) [ClassMethodDecl]
+    ) [ClassDeclaration]
+  ) [ProgListClass]
   MethodDeclListExists(
     MethodDeclarations(
       MethodDeclarations(
@@ -918,7 +977,7 @@ INFO  19:42:15,769 - Program(
     ) [MethodDeclarations]
   ) [MethodDeclListExists]
 ) [Program]
-INFO  19:42:15,770 - ===============================
-INFO  19:42:15,770 - Parsiranje uspesno zavrseno (bez generisanja, za sad)!
-INFO  19:42:15,770 - Generating bytecode file: C:\Users\stefc\Fakultet_lokal\PP1\pp1lab.templateAST\workspace\MJCompiler\test\program.obj
-INFO  19:42:15,782 - Parsiranje uspesno zavrseno!
+INFO  04:03:55,896 - ===============================
+INFO  04:03:55,896 - Parsiranje uspesno zavrseno (bez generisanja, za sad)!
+INFO  04:03:55,896 - Generating bytecode file: C:\Users\stefc\Fakultet_lokal\PP1\pp1lab.templateAST\workspace\MJCompiler\test\program.obj
+INFO  04:03:55,908 - Parsiranje uspesno zavrseno!

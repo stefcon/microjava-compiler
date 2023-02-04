@@ -81,7 +81,7 @@ nonterminal ConstDeclStart, ConstList, ConstDeclaration;
 nonterminal ProgVarDeclStart, ProgVarType, ProgVarList, ProgVarDeclaration;
 
 nonterminal ProgClassDecl, ClassName, OptionalClassExtends, OptionalClassMethodDecl, SuperClass;
-nonterminal ConstructorDeclList, ConstructorDeclStart, ConstructorDecl;
+nonterminal ConstructorDeclList, ConstructorDecl;
 
 nonterminal VarDeclStart, VarDeclList, VarList;
 nonterminal FormalParamList, FormalParamDecl, FormalParams; 
@@ -95,7 +95,8 @@ nonterminal FunctionName, OptionalMethodActualParams, ActualParameter, ActualPar
 
 nonterminal Relop, Addop, Mulop; 	
 
-nonterminal rs.etf.pp1.symboltable.concepts.Obj Program, ProgName, Designator, ForIdent, ConstType, MethodDecl, MethodTypeAndName; 
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Program, ProgName, Designator, ForIdent, ConstType;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ConstructorDeclStart, MethodDecl, MethodTypeAndName; 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Term, Expr, AssignmentStatementExpr, Factor, VarName;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct FunctionCall, Condition, ConditionTerm, ConditionFactor; 
 
@@ -209,7 +210,7 @@ ConstructorDeclList ::= (ConstructorDeclarationList) ConstructorDeclList Constru
 						(ConstructorDeclarationEmpty) /* epsilon */
 						;
 						
-ConstructorDecl ::= (ConstructorDeclarationInst) ConstructorDeclStart FormalParams RPAREN VarDeclList LBRACE StatementList RBRACE
+ConstructorDecl ::= (ConstructorDeclarationInst) ConstructorDeclStart FormalParams RPAREN VarDeclList LBRACE OptionalStatementList RBRACE
 ;
 
 					

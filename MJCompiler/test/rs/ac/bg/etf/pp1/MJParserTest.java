@@ -47,19 +47,23 @@ public class MJParserTest {
 		try (BufferedReader br = new BufferedReader(new FileReader(sourceCode))) {
 			Yylex lexer = new Yylex(br);
 			MJParser p = new MJParser(lexer);
-	        Symbol s = p.parse();  //pocetak parsiranja
-	        Program prog = (Program)(s.value);
+			SemanticAnalyzer semanticCheck = null;
+	        Symbol s = p.parse();
+	        Program prog = null;
 	        
-			Tab.init(); // Universe scope
-			SemanticAnalyzer semanticCheck = new SemanticAnalyzer();
-			prog.traverseBottomUp(semanticCheck);
-			
-//	        log.info("Print calls = " + semanticCheck.printCallCount);
-	        Tab.dump();
-	        
-	        log.info("===============================");
-	        log.info(prog.toString(""));
-	        log.info("===============================");
+	        if (!p.errorDetected) {	        	
+	        	prog = (Program)(s.value);
+	        	
+	        	Tab.init(); // Universe scope
+	        	semanticCheck = new SemanticAnalyzer();
+	        	prog.traverseBottomUp(semanticCheck);
+	        	
+	        	Tab.dump();
+	        	
+	        	log.info("===============================");
+	        	log.info(prog.toString(""));
+	        	log.info("===============================");
+	        }
 	        
 	        if (!p.errorDetected && semanticCheck.passed()) {
 	        	log.info("Parsiranje uspesno zavrseno (bez generisanja, za sad)!");
