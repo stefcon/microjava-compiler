@@ -81,7 +81,7 @@ nonterminal ConstDeclStart, ConstList, ConstDeclaration;
 nonterminal ProgVarDeclStart, ProgVarType, ProgVarList, ProgVarDeclaration;
 
 nonterminal ProgClassDecl, ClassName, OptionalClassExtends, OptionalClassMethodDecl, SuperClass;
-nonterminal ConstructorDeclList, ConstructorDecl;
+nonterminal ConstructorDeclList, ConstructorDecl, ClassNewType;
 
 nonterminal VarDeclStart, VarDeclList, VarList;
 nonterminal FormalParamList, FormalParamDecl, FormalParams; 
@@ -443,7 +443,7 @@ Factor ::= (ConstFactor) ConstType
 		   |
 		   (DesignatorFactor) Designator:d
 		   |
-		   (OperatorNewClass) NEW Type LPAREN OptionalMethodActualParams RPAREN
+		   (OperatorNewClass) ClassNewType LPAREN OptionalMethodActualParams RPAREN
 		   |
 		   (OperatorNewArr) NEW Type LBRACKET Expr RBRACKET
 		   |
@@ -452,7 +452,8 @@ Factor ::= (ConstFactor) ConstType
 		   (ExprFactor) LPAREN Expr RPAREN
 		   ;
 		   
-
+ClassNewType ::= (ClassNewType) NEW Type
+;
 
 Addop ::= (PlusOp) PLUS 
 		  |

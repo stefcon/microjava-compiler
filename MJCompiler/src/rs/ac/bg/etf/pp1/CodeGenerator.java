@@ -1,10 +1,12 @@
 package rs.ac.bg.etf.pp1;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Stack;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import rs.ac.bg.etf.pp1.CounterVisitor.*;
@@ -25,6 +27,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	private List<Obj> classList;
 	private Set<Obj> globalFunctions;
+	private Map<String, Integer> tvfStartAddressMap = new HashMap<>();
 
 	private boolean insideClass = false;
 
@@ -75,6 +78,33 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	/* Class scopes */
 	// TODO:
+	private void addTvfConstant(int value, int num) {
+		Code.loadConst(value);
+		Code.put(Code.putstatic);
+		Code.put2(num);
+	}
+	
+	private void generateTVF() {
+		int cursor = Code.dataSize;
+		
+		for (Obj cls : classList) {
+			tvfStartAddressMap.put(cls.getName(), cursor);
+			for (Obj clsMember : cls.getType().getMembers()) {
+				if (clsMember.getKind() != Obj.Meth || clsMember.getName().contains("#")) continue;
+				
+				for (char character : clsMember.getName().toCharArray()) {
+					addTvfConstant(character, cursor++);
+				}
+				// End of string
+				addTvfConstant(-1, cursor++);
+				
+				// Addr field
+				addTvfConstant(clsMember.getAdr(), cursor++);
+			}
+			addTvfConstant(-2, cursor++);
+		}
+		Code.dataSize = cursor;
+	}
 
 	/* Print and read */
 	public void visit(PrintStatement print) {
@@ -202,8 +232,8 @@ public class CodeGenerator extends VisitorAdaptor {
 			first_param = it.next();
 		}
 
-		if (insideClass && (obj.getKind() == Obj.Fld
-				|| obj.getKind() == Obj.Meth && first_param != null && first_param.getName().equals("this"))) {
+		if (insideClass && (obj.getKind() == Obj.Fld && !obj.getName().equals(SemanticAnalyzer.THIS)
+			|| obj.getKind() == Obj.Meth && first_param != null && first_param.getName().equals(SemanticAnalyzer.THIS))) {
 			return true;
 		} else {
 			return false;
@@ -303,7 +333,8 @@ public class CodeGenerator extends VisitorAdaptor {
 		if (MAIN.equalsIgnoreCase(methodTypeName.getMethName())) {
 			Code.mainPc = mainPc = Code.pc;
 
-			// TODO: generating vtf
+			// When main is defined, all global declaration have been processed
+			generateTVF();
 		}
 		methodTypeName.obj.setAdr(Code.pc);
 
