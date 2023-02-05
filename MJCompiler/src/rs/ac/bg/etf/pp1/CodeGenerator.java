@@ -18,15 +18,15 @@ import rs.etf.pp1.symboltable.concepts.Struct;
 
 public class CodeGenerator extends VisitorAdaptor {
 
-	private int varCount;
-	private int paramCnt;
-
 	private int mainPc;
 
 	private List<Obj> classList;
 	private Set<Obj> globalFunctions;
 	private Map<String, Integer> tvfStartAddressMap = new HashMap<>();
+	private Map<String, List<Obj>> classConstructorsMap;
+	
 	private Struct newInstanceType = null;
+	private ArrayList<Struct> actualParametersList = new ArrayList<>();
 
 	private boolean insideClass = false;
 
@@ -37,9 +37,10 @@ public class CodeGenerator extends VisitorAdaptor {
 		return mainPc;
 	}
 
-	CodeGenerator(List<Obj> classList, Set<Obj> globalFunctions) {
+	CodeGenerator(List<Obj> classList, Set<Obj> globalFunctions, Map<String, List<Obj>> classConstructorsMap) {
 		this.classList = classList;
 		this.globalFunctions = globalFunctions;
+		this.classConstructorsMap = classConstructorsMap;
 	}
 
 	private void generateChrAndOrdCode() {
@@ -247,12 +248,52 @@ public class CodeGenerator extends VisitorAdaptor {
 	
 	public void visit(OperatorNewClass newClass) {
 		
+		Struct type = newClass.getClassNewType().getType().struct;
+		newClass.struct = type;
+		
+		// Check if constructor exists based on actual parameters
+		String className = newClass.getClassNewType().getType().getTypeName();
+		
+		
+		boolean match = false;
+		for (Obj classConstructor : classConstructorsMap.get(className)) {
+			if (actualParametersList.size() != classConstructor.getLevel())
+				continue;
+			
+			match = true;
+			Iterator<Struct> actualParamIterator = actualParametersList.iterator();
+			Iterator<Obj> constructoParamIterator = classConstructor.getLocalSymbols().iterator();
+			for (int i = 0; i < classConstructor.getLevel(); ++i) {
+				Struct actualParamter = actualParamIterator.next();
+				Obj constructorParameter = constructoParamIterator.next();
+
+				if (!actualParamter.assignableTo(constructorParameter.getType())) {
+					match = false;
+					break;
+				}
+			}
+			if (match) {
+				int offset = classConstructor.getAdr() - Code.pc;
+				Code.put(Code.call);
+				Code.put2(offset);
+				break;
+			}
+		}
+		
+		actualParametersList = new ArrayList<>();
+		newInstanceType = null;
 	}
 	
-	public void visit(ActualParameter actualParameter) {
-//		if (!globalFunctions.contains(current))
+	public void visit(ActualParamSingle actualParam) {
+		if (newInstanceType != null)
+			actualParametersList.add(actualParam.getActualParameter().getExpr().struct);
 	}
 
+	public void visit(ActualParamListRec actualParam) {
+		if (newInstanceType != null)
+			actualParametersList.add(actualParam.getActualParameter().getExpr().struct);
+	}
+	
 	// Increment and decrement
 	public void visit(IncrementDesignator incDesignator) {
 		Code.put(Code.const_1);
@@ -429,6 +470,8 @@ public class CodeGenerator extends VisitorAdaptor {
 			return;
 		}
 		// Virtual function
+		
+		// Load 'this' parameter for invokevirtual
 		designator.traverseBottomUp(this);
 		
 		Code.put(Code.getfield);
@@ -647,21 +690,5 @@ public class CodeGenerator extends VisitorAdaptor {
 	private boolean isLastConditionTerm(ConditionTerm condTerm) {
 		return !(condTerm.getParent().getParent() instanceof ConditionOr);
 	}
-
-	// TODO: Unused (for now)
-//	@Override
-//	public void visit(VarNameSingle VarDecl) {
-//		varCount++;
-//	}
-//
-//	@Override
-//	public void visit(VarNameArray VarDecl) {
-//		varCount++;
-//	}
-//
-//	@Override
-//	public void visit(FormalParamDecl FormalParam) {
-//		paramCnt++;
-//	}
 
 }
