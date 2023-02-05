@@ -24,7 +24,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	private Set<Obj> globalFunctions;
 	private Map<String, Integer> tvfStartAddressMap = new HashMap<>();
 	private Map<String, List<Obj>> classConstructorsMap;
-	
+
 	private Struct newInstanceType = null;
 	private ArrayList<Struct> actualParametersList = new ArrayList<>();
 
@@ -83,22 +83,23 @@ public class CodeGenerator extends VisitorAdaptor {
 		Code.put(Code.putstatic);
 		Code.put2(num);
 	}
-	
+
 	private void generateTVF() {
 		// Code.dataSize has already been updated in during semantic analysis
 		int cursor = Code.dataSize;
-		
+
 		for (Obj cls : classList) {
 			tvfStartAddressMap.put(cls.getName(), cursor);
 			for (Obj clsMember : cls.getType().getMembers()) {
-				if (clsMember.getKind() != Obj.Meth || clsMember.getName().contains("#")) continue;
-				
+				if (clsMember.getKind() != Obj.Meth || clsMember.getName().contains("#"))
+					continue;
+
 				for (char character : clsMember.getName().toCharArray()) {
 					addTvfConstant(character, cursor++);
 				}
 				// End of string
 				addTvfConstant(-1, cursor++);
-				
+
 				// Addr field
 				addTvfConstant(clsMember.getAdr(), cursor++);
 			}
@@ -106,22 +107,23 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 		Code.dataSize = cursor;
 	}
+
 	/* Class declaration */
 	public void visit(ClassName className) {
 		insideClass = true;
 	}
-	
+
 	public void visit(ClassDeclaration classDeclaration) {
 		Struct classType = classDeclaration.getClassName().obj.getType();
 		if (classType.getElemType() != null) {
 			// Initialize copied methods starting address in subclass!
 			Struct superClassType = classType.getElemType();
 			for (Obj superClassMember : superClassType.getMembers()) {
-				if (superClassMember.getKind() != Obj.Meth) continue;
+				if (superClassMember.getKind() != Obj.Meth)
+					continue;
 				for (Obj classMember : classType.getMembers()) {
-					if (classMember.getKind() != Obj.Meth 
-						|| !classMember.getName().equals(superClassMember.getName())
-						|| classMember.getAdr() != 0) {
+					if (classMember.getKind() != Obj.Meth || !classMember.getName().equals(superClassMember.getName())
+							|| classMember.getAdr() != 0) {
 						continue;
 					}
 					classMember.setAdr(superClassMember.getAdr());
@@ -130,17 +132,17 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 		insideClass = false;
 	}
-	
+
 	public void visit(ConstructorDeclarationStart constructorDeclStart) {
 		Obj obj = constructorDeclStart.obj;
-		
+
 		obj.setAdr(Code.pc);
-		
+
 		Code.put(Code.enter);
 		Code.put(obj.getLevel());
 		Code.put(obj.getLocalSymbols().size());
 	}
-	
+
 	public void visit(ConstructorDeclarationInst constructorDeclaration) {
 		Code.put(Code.exit);
 		Code.put(Code.return_);
@@ -231,11 +233,12 @@ public class CodeGenerator extends VisitorAdaptor {
 	private int calculateTypeSize(Struct type) {
 		int size = 0;
 		for (Obj member : type.getMembers()) {
-			if (member.getKind() == Obj.Fld) size += member.getType().equals(Tab.charType) ? 1 : 4;
+			if (member.getKind() == Obj.Fld)
+				size += member.getType().equals(Tab.charType) ? 1 : 4;
 		}
 		return size;
 	}
-	
+
 	public void visit(OperatorNewArr newArr) {
 		// 0 - char, 1 - int, bool
 		int arrayType = 0;
@@ -245,7 +248,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		Code.put(Code.newarray);
 		Code.put(arrayType);
 	}
-	
+
 	public void visit(ClassNewType classNewType) {
 		Struct type = classNewType.getType().struct;
 		int size = calculateTypeSize(type);
@@ -257,32 +260,31 @@ public class CodeGenerator extends VisitorAdaptor {
 		Code.put(Code.putfield);
 		Code.put2(0);
 		Code.put(Code.dup);
-		
+
 		newInstanceType = type;
 	}
-	
+
 	public void visit(OperatorNewClass newClass) {
-		
+
 		Struct type = newClass.getClassNewType().getType().struct;
 		newClass.struct = type;
-		
+
 		// Check if constructor exists based on actual parameters
 		String className = newClass.getClassNewType().getType().getTypeName();
-		
-		
+
 		boolean match = false;
 		for (Obj classConstructor : classConstructorsMap.get(className)) {
 			int formalParametersCount = classConstructor.getLevel() - 1;
 			if (actualParametersList.size() != formalParametersCount)
 				continue;
-			
+
 			match = true;
 			Iterator<Struct> actualParamIterator = actualParametersList.iterator();
 			Iterator<Obj> constructorParamIterator = classConstructor.getLocalSymbols().iterator();
-			
+
 			// Skip this
 			constructorParamIterator.next();
-			
+
 			for (int i = 0; i < formalParametersCount; ++i) {
 				Struct actualParamter = actualParamIterator.next();
 				Obj constructorParameter = constructorParamIterator.next();
@@ -299,11 +301,11 @@ public class CodeGenerator extends VisitorAdaptor {
 				break;
 			}
 		}
-		
+
 		actualParametersList = new ArrayList<>();
 		newInstanceType = null;
 	}
-	
+
 	public void visit(ActualParamSingle actualParam) {
 		if (newInstanceType != null)
 			actualParametersList.add(actualParam.getActualParameter().getExpr().struct);
@@ -313,7 +315,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		if (newInstanceType != null)
 			actualParametersList.add(actualParam.getActualParameter().getExpr().struct);
 	}
-	
+
 	// Increment and decrement
 	public void visit(IncrementDesignator incDesignator) {
 		Code.put(Code.const_1);
@@ -346,8 +348,8 @@ public class CodeGenerator extends VisitorAdaptor {
 			first_param = it.next();
 		}
 
-		if (insideClass && (obj.getKind() == Obj.Fld
-			|| obj.getKind() == Obj.Meth && first_param != null && first_param.getName().equals(SemanticAnalyzer.THIS))) {
+		if (insideClass && (obj.getKind() == Obj.Fld || obj.getKind() == Obj.Meth && first_param != null
+				&& first_param.getName().equals(SemanticAnalyzer.THIS))) {
 			return true;
 		} else {
 			return false;
@@ -371,8 +373,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		if (inDesignatorList) {
 			return false;
 		} else if (inDesignatorList || designator.obj.getKind() == Obj.Meth
-				|| designator.getParent() instanceof DesignatorReal 
-				|| designator.getParent() instanceof AssignmentExpr
+				|| designator.getParent() instanceof DesignatorReal || designator.getParent() instanceof AssignmentExpr
 				|| designator.getParent() instanceof DesignatorStatementStmt
 				|| designator.getParent() instanceof ReadStatement) {
 			return false;
@@ -442,7 +443,7 @@ public class CodeGenerator extends VisitorAdaptor {
 			Code.load(designator.obj);
 		}
 	}
-	
+
 	private void processMethodTypeAndName(SyntaxNode node, String name, Obj obj) {
 		if (SemanticAnalyzer.MAIN.equalsIgnoreCase(name)) {
 			Code.mainPc = mainPc = Code.pc;
@@ -470,11 +471,10 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 	}
 
-
 	public void visit(MethodTypeName methodTypeName) {
 		processMethodTypeAndName(methodTypeName, methodTypeName.getMethName(), methodTypeName.obj);
 	}
-	
+
 	public void visit(MethodVoidName methodVoidName) {
 		processMethodTypeAndName(methodVoidName, methodVoidName.getMethName(), methodVoidName.obj);
 	}
@@ -499,10 +499,10 @@ public class CodeGenerator extends VisitorAdaptor {
 			return;
 		}
 		// Virtual function
-		
+
 		// Load 'this' parameter for invokevirtual
 		designator.traverseBottomUp(this);
-		
+
 		Code.put(Code.getfield);
 		Code.put2(0);
 
@@ -555,7 +555,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		loopStartAddressStack.push(Code.pc);
 		addressesToFixAfterLoop.push(new HashSet<>());
 	}
-	
+
 	public void visit(WhileStatement whileStatement) {
 		Code.putJump(loopStartAddressStack.pop());
 		addressesToFixAfterLoop.pop().forEach(Code::fixup);
@@ -573,19 +573,19 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	public void visit(ContinueStatement continueStatement) {
 		Code.put(Code.jmp);
-		Code.put2(loopStartAddressStack.peek()-Code.pc+1);
+		Code.put2(loopStartAddressStack.peek() - Code.pc + 1);
 	}
-	
+
 	public void visit(ForeachKeyWord foreachKeyWord) {
 		// Putting temp index variable on stack
 		Code.put(Code.const_n);
 		addressesToFixAfterLoop.push(new HashSet<>());
 	}
-	
-	public void visit(ForIdent forIdent) {		
+
+	public void visit(ForIdent forIdent) {
 		// Address that we are looping to
 		loopStartAddressStack.push(Code.pc);
-		
+
 		// Stack: ..., adr, ind
 		Code.put(Code.dup2); // ..., adr, ind, adr, ind
 		Code.put(Code.dup_x2); // ..., adr, ind, ind, adr, ind
@@ -593,18 +593,18 @@ public class CodeGenerator extends VisitorAdaptor {
 		Code.put(Code.arraylength); // ..., adr, ind, ind, len
 		Code.putFalseJump(Code.lt, 0);
 		addressesToFixAfterLoop.peek().add(Code.pc - 2);
-		
+
 		// Preparing for new iteration
 		// ..., adr, ind
 		Code.put(Code.dup2); // ..., adr, ind, adr, ind
 		Code.put(Code.aload);
 		Code.store(forIdent.obj); // ..., adr, ind
 	}
-	
+
 	public void visit(ForeachConstruct foreachConstruct) {
 		Code.put(Code.const_1);
 		Code.put(Code.add); // Stack: ...,adr, ind + 1
-		
+
 		Code.putJump(loopStartAddressStack.pop());
 		addressesToFixAfterLoop.pop().forEach(Code::fixup);
 
@@ -623,14 +623,14 @@ public class CodeGenerator extends VisitorAdaptor {
 		// Placeholder variable and operation
 		Code.loadConst(1);
 		int relOp = Code.eq;
-		
+
 		processConditionFactor(relOp, conditionFactor);
 	}
-	
+
 	public void visit(ConditionFactorRel conditionFactor) {
 		Relop relopNode = conditionFactor.getRelop();
 		int relOp = determineRelOp(relopNode);
-		
+
 		processConditionFactor(relOp, conditionFactor);
 	}
 
@@ -638,7 +638,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	private void processConditionFactor(int relOp, ConditionFactor conditionFactor) {
 		ConditionTerm conditionTerm = getConditionTerm(conditionFactor);
 		ControlCondition controlCondition = getControlCondition(conditionTerm);
-		
+
 		if (isLastConditionFactor(conditionFactor) && isLastConditionTerm(conditionTerm)) {
 			// (x || Y)
 			if (isIfCondition(controlCondition)) {
@@ -648,33 +648,29 @@ public class CodeGenerator extends VisitorAdaptor {
 				Code.putFalseJump(relOp, 0);
 				addressesToFixAfterLoop.peek().add(Code.pc - 2);
 			}
-		} 
-		else if (isLastConditionFactor(conditionFactor) && !isLastConditionTerm(conditionTerm)) {
+		} else if (isLastConditionFactor(conditionFactor) && !isLastConditionTerm(conditionTerm)) {
 			// (X || y)
 			if (isIfCondition(controlCondition) || isWhileCondition(controlCondition)) {
 				Code.put(Code.jcc + relOp);
 				Code.put2(0);
 				addressesToFixAfterControlCondition.add(Code.pc - 2);
 			}
-		} 
-		else if (!isLastConditionFactor(conditionFactor) && isLastConditionTerm(conditionTerm)) {
+		} else if (!isLastConditionFactor(conditionFactor) && isLastConditionTerm(conditionTerm)) {
 			// (x || Y && z);
 			Code.putFalseJump(relOp, 0);
-			
+
 			if (isIfCondition(controlCondition)) {
 				addressesToFixAfterElseOrUnmatched.peek().add(Code.pc - 2);
 			} else if (isWhileCondition(controlCondition)) {
 				addressesToFixAfterLoop.peek().add(Code.pc - 2);
 			}
-		}
-		else {
+		} else {
 			// (X && y || z)
 			Code.putFalseJump(relOp, 0);
 			addressesToFixAfterOr.add(Code.pc - 2);
 		}
 	}
-	
-	
+
 	private int determineRelOp(Relop relationOperator) {
 		if (relationOperator instanceof EqualsOp) {
 			return Code.eq;
@@ -694,7 +690,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	private boolean isIfCondition(ControlCondition controlCondition) {
 		return controlCondition.getParent() instanceof IfConstruct;
 	}
-	
+
 	private boolean isWhileCondition(ControlCondition controlCondition) {
 		return controlCondition.getParent() instanceof WhileConstruct;
 	}
