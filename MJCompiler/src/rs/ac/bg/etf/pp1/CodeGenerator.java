@@ -17,8 +17,6 @@ import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Struct;
 
 public class CodeGenerator extends VisitorAdaptor {
-	
-	public String MAIN = "main";
 
 	private int varCount;
 	private int paramCnt;
@@ -28,6 +26,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	private List<Obj> classList;
 	private Set<Obj> globalFunctions;
 	private Map<String, Integer> tvfStartAddressMap = new HashMap<>();
+	private Struct newInstanceType = null;
 
 	private boolean insideClass = false;
 
@@ -112,7 +111,23 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 	
 	public void visit(ClassDeclaration classDeclaration) {
-//		Struct classType = classDeclaration.getClassName()
+		Struct classType = classDeclaration.getClassName().obj.getType();
+		if (classType.getElemType() != null) {
+			// Initialize copied methods starting address in subclass!
+			Struct superClassType = classType.getElemType();
+			for (Obj superClassMember : superClassType.getMembers()) {
+				if (superClassMember.getKind() != Obj.Meth) continue;
+				for (Obj classMember : classType.getMembers()) {
+					if (classMember.getKind() != Obj.Meth 
+						|| !classMember.getName().equals(superClassMember.getName())
+						|| classMember.getAdr() != 0) {
+						continue;
+					}
+					classMember.setAdr(superClassMember.getAdr());
+				}
+			}
+		}
+		insideClass = false;
 	}
 
 	/* Print and read */
@@ -197,6 +212,14 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 
 	// New Operators TODO: Class
+	private int calculateTypeSize(Struct type) {
+		int size = 0;
+		for (Obj member : type.getMembers()) {
+			if (member.getKind() == Obj.Fld) size += member.getType().equals(Tab.charType) ? 1 : 4;
+		}
+		return size;
+	}
+	
 	public void visit(OperatorNewArr newArr) {
 		// 0 - char, 1 - int, bool
 		int arrayType = 0;
@@ -205,6 +228,29 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 		Code.put(Code.newarray);
 		Code.put(arrayType);
+	}
+	
+	public void visit(ClassNewType classNewType) {
+		Struct type = classNewType.getType().struct;
+		int size = calculateTypeSize(type);
+		Code.put(Code.new_);
+		Code.put2(size);
+		// dup for VTF
+		Code.put(Code.dup);
+		Code.loadConst(tvfStartAddressMap.get(classNewType.getType().getTypeName()));
+		Code.put(Code.putfield);
+		Code.put2(0);
+		Code.put(Code.dup);
+		
+		newInstanceType = type;
+	}
+	
+	public void visit(OperatorNewClass newClass) {
+		
+	}
+	
+	public void visit(ActualParameter actualParameter) {
+//		if (!globalFunctions.contains(current))
 	}
 
 	// Increment and decrement
@@ -226,14 +272,12 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(AssignmentExpr assignment) {
 		Code.store(assignment.getDesignator().obj);
 
-		// TODO: Poseban slucaj za klase
+//		// TODO: Poseban slucaj za klase
+//		if (newInstanceType != null) {
+//			
+//		}
 	}
 
-	// TODO: multiple assignment for designators...
-//	public void visit(MultipleAssignmentStatement assignment) {
-//		Code.store()
-//	}
-//	
 	private boolean isClassFieldOrMethod(Obj obj) {
 		Obj first_param = null;
 		Iterator<Obj> it = obj.getLocalSymbols().iterator();
@@ -339,7 +383,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	@Override
 	public void visit(MethodTypeName methodTypeName) {
-		if (MAIN.equalsIgnoreCase(methodTypeName.getMethName())) {
+		if (SemanticAnalyzer.MAIN.equalsIgnoreCase(methodTypeName.getMethName())) {
 			Code.mainPc = mainPc = Code.pc;
 
 			// When main is defined, all global declaration have been processed
@@ -376,14 +420,17 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 
 	public void visit(FunctionCall functionCall) {
-		Obj functionObj = functionCall.getFunctionName().getDesignator().obj;
-		int offset = functionObj.getAdr() - Code.pc;
+		Designator designator = functionCall.getFunctionName().getDesignator();
+		Obj functionObj = designator.obj;
 		if (globalFunctions.contains(functionObj)) {
+			int offset = functionObj.getAdr() - Code.pc;
 			Code.put(Code.call);
 			Code.put2(offset);
 			return;
 		}
 		// Virtual function
+		designator.traverseBottomUp(this);
+		
 		Code.put(Code.getfield);
 		Code.put2(0);
 
@@ -602,19 +649,19 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 
 	// TODO: Unused (for now)
-	@Override
-	public void visit(VarNameSingle VarDecl) {
-		varCount++;
-	}
-
-	@Override
-	public void visit(VarNameArray VarDecl) {
-		varCount++;
-	}
-
-	@Override
-	public void visit(FormalParamDecl FormalParam) {
-		paramCnt++;
-	}
+//	@Override
+//	public void visit(VarNameSingle VarDecl) {
+//		varCount++;
+//	}
+//
+//	@Override
+//	public void visit(VarNameArray VarDecl) {
+//		varCount++;
+//	}
+//
+//	@Override
+//	public void visit(FormalParamDecl FormalParam) {
+//		paramCnt++;
+//	}
 
 }

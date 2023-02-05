@@ -80,7 +80,7 @@ nonterminal ProgDeclList, OptionalMethodDeclList, MethodDeclList;
 nonterminal ConstDeclStart, ConstList, ConstDeclaration;
 nonterminal ProgVarDeclStart, ProgVarType, ProgVarList, ProgVarDeclaration;
 
-nonterminal ProgClassDecl, ClassName, OptionalClassExtends, OptionalClassMethodDecl, SuperClass;
+nonterminal ProgClassDecl, OptionalClassExtends, OptionalClassMethodDecl, SuperClass;
 nonterminal ConstructorDeclList, ConstructorDecl, ClassNewType;
 
 nonterminal VarDeclStart, VarDeclList, VarList;
@@ -96,7 +96,7 @@ nonterminal FunctionName, OptionalMethodActualParams, ActualParameter, ActualPar
 nonterminal Relop, Addop, Mulop; 	
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Program, ProgName, Designator, ForIdent, ConstType;
-nonterminal rs.etf.pp1.symboltable.concepts.Obj ConstructorDeclStart, MethodDecl, MethodTypeAndName; 
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ClassName, ConstructorDeclStart, MethodDecl, MethodTypeAndName; 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Term, Expr, AssignmentStatementExpr, Factor, VarName;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct FunctionCall, Condition, ConditionTerm, ConditionFactor; 
 
