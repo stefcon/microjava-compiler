@@ -85,7 +85,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 
 	private void generateTVF() {
-		// Code.dataSize has already been updated in during semantic analysis
+		// Code.dataSize has already been updated during semantic analysis
 		int cursor = Code.dataSize;
 
 		for (Obj cls : classList) {
@@ -334,11 +334,6 @@ public class CodeGenerator extends VisitorAdaptor {
 	@Override
 	public void visit(AssignmentExpr assignment) {
 		Code.store(assignment.getDesignator().obj);
-
-//		// TODO: Poseban slucaj za klase
-//		if (newInstanceType != null) {
-//			
-//		}
 	}
 
 	private boolean isClassFieldOrMethod(Obj obj) {
@@ -540,15 +535,24 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(ElseKeyWord elseKeyWord) {
 		Code.putJump(0);
 		addressesToFixAfterIfMatched.peek().add(Code.pc - 2);
-		addressesToFixAfterElseOrUnmatched.pop().forEach(Code::fixup);
+//		addressesToFixAfterElseOrUnmatched.pop().forEach(Code::fixup);
+		for (Integer address : addressesToFixAfterElseOrUnmatched.pop()) {
+			Code.fixup(address);
+		}
 	}
 
 	public void visit(IfElseStatement ifStatement) {
-		addressesToFixAfterIfMatched.pop().forEach(Code::fixup);
+//		addressesToFixAfterIfMatched.pop().forEach(Code::fixup);
+		for (Integer address : addressesToFixAfterIfMatched.pop()) {
+			Code.fixup(address);
+		}
 	}
 
 	public void visit(IfStatement ifStatement) {
-		addressesToFixAfterElseOrUnmatched.pop().forEach(Code::fixup);
+//		addressesToFixAfterElseOrUnmatched.pop().forEach(Code::fixup);
+		for (Integer address : addressesToFixAfterElseOrUnmatched.pop()) {
+			Code.fixup(address);
+		}
 	}
 
 	public void visit(WhileKeyWord whileKeyWord) {
@@ -558,11 +562,17 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	public void visit(WhileStatement whileStatement) {
 		Code.putJump(loopStartAddressStack.pop());
-		addressesToFixAfterLoop.pop().forEach(Code::fixup);
+//		addressesToFixAfterLoop.pop().forEach(Code::fixup);
+		for (Integer address : addressesToFixAfterLoop.pop()) {
+			Code.fixup(address);
+		}
 	}
 
 	public void visit(ControlCondition condition) {
-		addressesToFixAfterControlCondition.forEach(Code::fixup);
+//		addressesToFixAfterControlCondition.forEach(Code::fixup);
+		for (Integer address : addressesToFixAfterControlCondition) {
+			Code.fixup(address);
+		}
 		addressesToFixAfterControlCondition = new HashSet<>();
 	}
 
@@ -606,7 +616,10 @@ public class CodeGenerator extends VisitorAdaptor {
 		Code.put(Code.add); // Stack: ...,adr, ind + 1
 
 		Code.putJump(loopStartAddressStack.pop());
-		addressesToFixAfterLoop.pop().forEach(Code::fixup);
+//		addressesToFixAfterLoop.pop().forEach(Code::fixup);
+		for (Integer address : addressesToFixAfterLoop.pop()) {
+			Code.fixup(address);
+		}
 
 		// Empty stack
 		Code.put(Code.pop);
@@ -614,7 +627,11 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 
 	public void visit(OrKeyWord orKeyWord) {
-		addressesToFixAfterOr.forEach(Code::fixup);
+//		addressesToFixAfterOr.forEach(Code::fixup);
+		for (Integer address : addressesToFixAfterOr) {
+			Code.fixup(address);
+		}
+
 		addressesToFixAfterOr = new HashSet<>();
 	}
 
