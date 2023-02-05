@@ -230,7 +230,7 @@ MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDecl
 				   (MethodDeclSingle) MethodDecl
 				   ;
 
-MethodDecl ::= (MethodDecl) MethodTypeAndName LPAREN FormalParams RPAREN VarDeclList LBRACE StatementList RBRACE 
+MethodDecl ::= (MethodDecl) MethodTypeAndName LPAREN FormalParams RPAREN VarDeclList LBRACE OptionalStatementList RBRACE 
 ;
 
 MethodTypeAndName ::= (MethodTypeName) Type:retType IDENT:methName

@@ -66,7 +66,7 @@ public class MJParserTest {
 	        }
 	        
 	        if (!p.errorDetected && semanticCheck.passed()) {
-	        	log.info("Parsiranje uspesno zavrseno (bez generisanja, za sad)!");
+	        	log.info("Parsiranje uspesno zavrseno!");
 	        	
 	        	File objFile;
 	        	if (args.length > 0) objFile = new File(args[1]);
@@ -75,10 +75,10 @@ public class MJParserTest {
 	        	if (objFile.exists())
 	        		objFile.delete();
 	        	
-	        	// Code generation... TODO: Dok se ne proveri semantic pass, ostaviti zakomentarisano
 	        	CodeGenerator codeGenerator = new CodeGenerator(
 	        			semanticCheck.getClassList(),
-	        			semanticCheck.getGlobalFunctions());
+	        			semanticCheck.getGlobalFunctions(),
+	        			semanticCheck.getClassConstructorsMap());
 	        	prog.traverseBottomUp(codeGenerator);
 //	        	Code.dataSize = semanticCheck.getNVars();
 	        	Code.mainPc = codeGenerator.getMainPc();

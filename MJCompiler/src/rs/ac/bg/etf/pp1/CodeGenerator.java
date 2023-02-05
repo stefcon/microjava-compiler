@@ -130,6 +130,21 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 		insideClass = false;
 	}
+	
+	public void visit(ConstructorDeclarationStart constructorDeclStart) {
+		Obj obj = constructorDeclStart.obj;
+		
+		obj.setAdr(Code.pc);
+		
+		Code.put(Code.enter);
+		Code.put(obj.getLevel());
+		Code.put(obj.getLocalSymbols().size());
+	}
+	
+	public void visit(ConstructorDeclarationInst constructorDeclaration) {
+		Code.put(Code.exit);
+		Code.put(Code.return_);
+	}
 
 	/* Print and read */
 	public void visit(PrintStatement print) {
@@ -257,15 +272,20 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 		boolean match = false;
 		for (Obj classConstructor : classConstructorsMap.get(className)) {
-			if (actualParametersList.size() != classConstructor.getLevel())
+			int formalParametersCount = classConstructor.getLevel() - 1;
+			if (actualParametersList.size() != formalParametersCount)
 				continue;
 			
 			match = true;
 			Iterator<Struct> actualParamIterator = actualParametersList.iterator();
-			Iterator<Obj> constructoParamIterator = classConstructor.getLocalSymbols().iterator();
-			for (int i = 0; i < classConstructor.getLevel(); ++i) {
+			Iterator<Obj> constructorParamIterator = classConstructor.getLocalSymbols().iterator();
+			
+			// Skip this
+			constructorParamIterator.next();
+			
+			for (int i = 0; i < formalParametersCount; ++i) {
 				Struct actualParamter = actualParamIterator.next();
-				Obj constructorParameter = constructoParamIterator.next();
+				Obj constructorParameter = constructorParamIterator.next();
 
 				if (!actualParamter.assignableTo(constructorParameter.getType())) {
 					match = false;
@@ -326,7 +346,7 @@ public class CodeGenerator extends VisitorAdaptor {
 			first_param = it.next();
 		}
 
-		if (insideClass && (obj.getKind() == Obj.Fld && !obj.getName().equals(SemanticAnalyzer.THIS)
+		if (insideClass && (obj.getKind() == Obj.Fld
 			|| obj.getKind() == Obj.Meth && first_param != null && first_param.getName().equals(SemanticAnalyzer.THIS))) {
 			return true;
 		} else {
@@ -347,7 +367,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 
 	private boolean shouldLoadDesignator(Designator designator) {
-		int designatorListElemRole = isPartOfDesignatorListStmt(designator);
+//		int designatorListElemRole = isPartOfDesignatorListStmt(designator);
 		if (inDesignatorList) {
 			return false;
 		} else if (inDesignatorList || designator.obj.getKind() == Obj.Meth
@@ -401,7 +421,8 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 
 	public void visit(DesignatorSingle designator) {
-		if (!(isPartOfDesignatorListStmt(designator) == 0) && isClassFieldOrMethod(designator.obj)) {
+		// isPartOfDesignatorListStmt(designator) == 0 TODO: Razmisliti sta sa ovim
+		if (isClassFieldOrMethod(designator.obj)) {
 			Code.put(Code.load_n);
 		}
 
@@ -421,19 +442,18 @@ public class CodeGenerator extends VisitorAdaptor {
 			Code.load(designator.obj);
 		}
 	}
-
-	@Override
-	public void visit(MethodTypeName methodTypeName) {
-		if (SemanticAnalyzer.MAIN.equalsIgnoreCase(methodTypeName.getMethName())) {
+	
+	private void processMethodTypeAndName(SyntaxNode node, String name, Obj obj) {
+		if (SemanticAnalyzer.MAIN.equalsIgnoreCase(name)) {
 			Code.mainPc = mainPc = Code.pc;
 
 			// When main is defined, all global declaration have been processed
 			generateTVF();
 		}
-		methodTypeName.obj.setAdr(Code.pc);
+		obj.setAdr(Code.pc);
 
 		// Collect arguments and local variables.
-		SyntaxNode methodNode = methodTypeName.getParent();
+		SyntaxNode methodNode = node.getParent();
 		VariableDeclarationCounter varCnt = new VariableDeclarationCounter();
 		methodNode.traverseTopDown(varCnt);
 		FormalParamCounter fpCnt = new FormalParamCounter();
@@ -441,13 +461,22 @@ public class CodeGenerator extends VisitorAdaptor {
 
 		// Generate the entry.
 		Code.put(Code.enter);
-		if (globalFunctions.contains(methodTypeName.obj)) {
+		if (globalFunctions.contains(obj)) {
 			Code.put(fpCnt.getCounter());
 			Code.put(varCnt.getCounter() + fpCnt.getCounter());
 		} else {
 			Code.put(fpCnt.getCounter() + 1);
 			Code.put(varCnt.getCounter() + fpCnt.getCounter() + 1);
 		}
+	}
+
+
+	public void visit(MethodTypeName methodTypeName) {
+		processMethodTypeAndName(methodTypeName, methodTypeName.getMethName(), methodTypeName.obj);
+	}
+	
+	public void visit(MethodVoidName methodVoidName) {
+		processMethodTypeAndName(methodVoidName, methodVoidName.getMethName(), methodVoidName.obj);
 	}
 
 	public void visit(MethodDecl methodDecl) {
