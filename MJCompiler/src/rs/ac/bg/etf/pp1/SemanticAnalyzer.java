@@ -414,11 +414,14 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	}
 	
 	private boolean isOverrideCorrect(Obj superMethod, Obj overrideMethod) {
+		// Second parameters is Obj in currentMethod attribute
 		if (superMethod.getLevel() != overrideMethod.getLevel()) {
 			return false;
 		}
 		
 		Iterator<Obj> superParamIterator = superMethod.getLocalSymbols().iterator();
+		// Haven't connected locals to currentMethod yet
+//		Iterator<Obj> overrideParamIterator = Tab.currentScope().getLocals().symbols().iterator();
 		Iterator<Obj> overrideParamIterator = overrideMethod.getLocalSymbols().iterator();
 		for (int i = 0; i < superMethod.getLevel(); ++i) {
 			Obj superParam = superParamIterator.next();
@@ -437,21 +440,19 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 					methodDeclaration);
 		}
 		
+		Tab.chainLocalSymbols(currentMethod);
+		Tab.closeScope();
 		
-		if (currentClass != null) {
+		if (currentClass != null && currentClass.getType().getElemType() != null) {
 			// Check if currentMethod represents override function
-			Obj superMethod = Tab.currentScope().getOuter().findSymbol(currentMethod.getName());
-			if (superMethod != null) {
+			Obj superMethod = currentClass.getType().getElemType().getMembersTable().searchKey(currentMethod.getName());
+			if (superMethod != null && superMethod.getKind() == Obj.Meth) {
 				if (!isOverrideCorrect(superMethod, currentMethod)) {
 					report_error("Semanticka greska: Preklopljena methoda nema isti potpis kao metoda natklase", methodDeclaration);
 				}
 			}
 		}
 		
-
-		Tab.chainLocalSymbols(currentMethod);
-		Tab.closeScope();
-
 		// Add to global functions and check if this is the main() function
 		if (currentClass == null) {
 			globalFunctions.add(currentMethod);

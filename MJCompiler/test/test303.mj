@@ -40,6 +40,7 @@ class Sfera extends Predmet
 		
 		 void postaviPoluprecnik(int r) {this.r = r; }
 		 
+		 
 		 int zapremina()
 			int z;
 		{
