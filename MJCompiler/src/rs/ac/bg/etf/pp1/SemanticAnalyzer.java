@@ -280,7 +280,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 		currentClassConstructors.add(currentMethod);
 
-//		currentMethod = null;
+		currentMethod = null;
 
 	}
 
@@ -331,8 +331,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			String constructorIdent = classDecl.getClassName().getName();
 			addDefaultConstructor(constructorIdent);
 			report_info("Dodat je podrazumevani konstruktor za klasu " + constructorIdent, classDecl);
-			report_info("Level podrazumevanog konstruktora: " + currentMethod.getLevel(), classDecl);
-			currentMethod = null;
 		}
 
 		Tab.chainLocalSymbols(currentClass.getType());
@@ -683,16 +681,10 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			if (!globalFunctions.contains(functionDesignator))
 				localSymbolsIter.next();
 
-//			boolean first_param = true;
 			while (localSymbolsIter.hasNext() && actualParamIterator.hasNext()) {
 				Obj parameter = localSymbolsIter.next();
 				Struct actualType = actualParamIterator.next();
 
-//				if (!globalFunctions.contains(functionDesignator) && parameter.getName() == "this"
-//						&& parameter.getType().getKind() == Struct.Class && first_param) {
-//					continue;
-//				}
-//				first_param = false;
 
 				boolean assignable = checkIfSubclass(parameter.getType(), actualType);
 				if (!assignable) {
