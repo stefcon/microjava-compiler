@@ -397,6 +397,16 @@ public class CodeGenerator extends VisitorAdaptor {
 		Obj elemObj = new Obj(Obj.Elem, stmt.getDesignator().obj.getName(), elemType);
 
 		int i = -1;
+		
+		// Check if array is longer than list, otherwise throw trap
+//		Code.loadConst(designatorLeft.stream().filter(node -> node != null).toList().size());
+		Code.loadConst(designatorLeft.size());
+		Code.load(stmt.getDesignator().obj);
+		Code.put(Code.arraylength);
+		Code.putFalseJump(Code.gt, Code.pc + 5);
+		Code.put(Code.trap);
+		Code.put(Code.const_1);
+		
 		for (DesignatorReal node : designatorLeft) {
 			++i;
 			// Won't detect if there are more elements
