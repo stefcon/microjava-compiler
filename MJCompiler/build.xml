@@ -14,6 +14,7 @@
 				<exclude name="CounterVisitor.java"/>
 				<exclude name="ConstructorDescriptor.java"/>
 				<exclude name="DumpSymbolTableVisitorExt.java"/>
+				<exclude name="Compiler.java"/>
 			</fileset>
 		</delete>
 		<delete>

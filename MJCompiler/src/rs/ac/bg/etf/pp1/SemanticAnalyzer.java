@@ -507,13 +507,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 	public void visit(OptFormalParams formalParamList) {
 		int numberOfParameters = Tab.currentScope.getnVars();
-		if (currentClass != null) {
-			// Excluding "this" parameter TODO: Necemo sad tako, da se istestira, pa skroz
-			// izmeni
-			currentMethod.setLevel(numberOfParameters);
-		} else {
-			currentMethod.setLevel(numberOfParameters);
-		}
+		currentMethod.setLevel(numberOfParameters);
 	}
 
 	public void visit(NoFormalParam formalParamList) {
@@ -902,7 +896,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	}
 
 	/* Control statements */
-	public void visit(ControlCondition controlCondition) {
+	public void visit(ControlConditionValid controlCondition) {
 		if (!controlCondition.getCondition().struct.equals(boolType)) {
 			report_error("Semanticka greska: Kontrolni uslove nije tipa bool", controlCondition);
 		}

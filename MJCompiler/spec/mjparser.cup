@@ -111,7 +111,6 @@ ProgName ::= (ProgName) IDENT:pName
 ;
 
 
-/* TODO: Dodati logiku za klase */
 
 ProgDeclList ::= (ProgListConst) ProgDeclList ConstDeclStart 
 				 |
@@ -124,7 +123,7 @@ ProgDeclList ::= (ProgListConst) ProgDeclList ConstDeclStart
 
 
 ConstDeclStart ::= (ConstDeclarationStart) CONST Type:constType ConstList SEMI
-;
+;			
 
 
 
@@ -145,12 +144,18 @@ ConstType ::= (ConstIntType) NUMBER
 			   
 			   
 VarDeclStart ::= (VarDeclarationStart) Type VarList SEMI
-;
+				 |
+				 (VarDeclarationSemiError) error SEMI
+ 				 |
+ 				 (VarDeclarationBracketError) error LBRACE
+				 ;
 
 
 VarList ::= (VarDeclarationList) VarList COMMA VarName
 		    |
 		    (BaseVarDeclarationList) VarName
+		    |
+			(VarDeclarationCommaError) error COMMA
 		    ;
 		    
 VarName ::= (VarNameSingle) IDENT:varName
@@ -166,8 +171,11 @@ VarDeclList ::= (VarDeclarations) VarDeclList VarDeclStart
 
 			   
 			   
-ProgVarDeclStart ::= (ProgVarDeclarationStart) ProgVarType ProgVarList SEMI
-;
+ProgVarDeclStart ::= (ProgVarDeclarationStart) ProgVarType ProgVarList SEMI 
+					 |
+					 (ProgVarDeclarationSemiError) error:l SEMI
+					 ;
+
 
 
 ProgVarType ::= (ProgVarType) Type
@@ -177,6 +185,8 @@ ProgVarType ::= (ProgVarType) Type
 ProgVarList ::= (ProgVarListRec) ProgVarList COMMA ProgVarDeclaration
 				|
 				(BaseProgVarDeclaration) ProgVarDeclaration
+				|
+				(ProgVarDeclarationCommaError) error:l COMMA
 				;
 				
 ProgVarDeclaration ::= (ProgVar) VarName
@@ -184,7 +194,9 @@ ProgVarDeclaration ::= (ProgVar) VarName
 
 
 ProgClassDecl ::= (ClassDeclaration) ClassName OptionalClassExtends LBRACE VarDeclList OptionalClassMethodDecl RBRACE
-;
+				  |
+				  (ClassDeclarationError) ClassName error VarDeclList OptionalClassMethodDecl RBRACE
+				  ;
 
 ClassName ::= (ClassName) CLASS IDENT:name
 ;
@@ -192,12 +204,13 @@ ClassName ::= (ClassName) CLASS IDENT:name
 OptionalClassExtends ::= (ClassExtends) EXT SuperClass
 						 |
 						 (NoClassExtends) /* epsilon */
+						 |
+						 (ClassExtendsError) EXT error:l 
+						 {: parser.report_error("Sintaksna greska: greska prilikom definisanja natklase na liniji: " + lleft, null); :} LBRACE
 						 ;
 
 SuperClass ::= (SuperClassIdent) IDENT:name
-			   |
-			   (SuperClassErr) error
-			   ;
+;
 						 
 OptionalClassMethodDecl ::= (ClassMethodDecl) LBRACE ConstructorDeclList OptionalMethodDeclList RBRACE
 							|
@@ -247,13 +260,13 @@ FormalParams ::= (OptFormalParams) FormalParamList
 FormalParamList ::= (FormalParamDecls) FormalParamList COMMA FormalParamDecl
 					|
 					(SingleFormalParamDecl) FormalParamDecl
+					|
+					(FormalParamListError) error:l {: parser.report_error("Sintaksna greska: greska prilikom pisanja formalnih parametara na liniji " + lleft, null); :} COMMA
 					;
 					
 FormalParamDecl ::= (FormalParamDeclSingle) Type:paramType IDENT:name
 					|
 					(FormalParamDeclArray) Type:paramType IDENT:name LBRACKET RBRACKET
-					|
-					error
 					;
 
 
@@ -294,6 +307,8 @@ Statement ::= (DesignatorStatementStmt) DesignatorStatement SEMI
 			  (IfElseStatement) IfConstruct ElseKeyWord Statement
 			  |
 			  (BlockStatement) LBRACE OptionalStatementList RBRACE
+			  |
+			  (DesignatorAssignmentError) Designator ASSIGN error:l {: parser.report_error("Sintaksna greska: greska pri dodeli na liniji: " + lleft, null); :} SEMI
 			  ;
 
 			  
@@ -325,8 +340,10 @@ ForeachDesignator ::= (ForeachDesignator) Designator DOT
 ;
 
 
-ControlCondition ::= (ControlCondition) LPAREN Condition RPAREN
-; /* error recovery kasnije */
+ControlCondition ::= (ControlConditionValid) LPAREN Condition RPAREN
+					 |
+					 (ControlConditionError) LPAREN error:l {: parser.report_error("Sintaksna greska: greksa pri pisanju uslovnog izraza na liniji: " + lleft, null); :} RPAREN
+					 ;
 
 
 
@@ -364,8 +381,6 @@ DesignatorStatement ::= (AssignmentStatement) AssignmentStatementExpr
 						(IncrementDesignator) Designator INC
 						|
 						(DecrementDesignator) Designator DEC
-						|
-						error
 						;
 						
 

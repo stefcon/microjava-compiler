@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import rs.ac.bg.etf.pp1.CounterVisitor.*;
 import rs.ac.bg.etf.pp1.ast.*;
 import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.symboltable.Tab;
@@ -399,6 +398,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		int i = -1;
 		
 		// Check if array is longer than list, otherwise throw trap
+		// Depending if we want to detect error with or without dummy elements
 //		Code.loadConst(designatorLeft.stream().filter(node -> node != null).toList().size());
 		Code.loadConst(designatorLeft.size());
 		Code.load(stmt.getDesignator().obj);
@@ -409,8 +409,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 		for (DesignatorReal node : designatorLeft) {
 			++i;
-			// Won't detect if there are more elements
-			// if exception happens on the 'dummy' element!
+
 			if (node == null) {
 				continue;
 			}
@@ -457,22 +456,10 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 		obj.setAdr(Code.pc);
 
-		// Collect arguments and local variables.
-		SyntaxNode methodNode = node.getParent();
-		VariableDeclarationCounter varCnt = new VariableDeclarationCounter();
-		methodNode.traverseTopDown(varCnt);
-		FormalParamCounter fpCnt = new FormalParamCounter();
-		methodNode.traverseTopDown(fpCnt);
-
 		// Generate the entry.
 		Code.put(Code.enter);
-		if (globalFunctions.contains(obj)) {
-			Code.put(fpCnt.getCounter());
-			Code.put(varCnt.getCounter() + fpCnt.getCounter());
-		} else {
-			Code.put(fpCnt.getCounter() + 1);
-			Code.put(varCnt.getCounter() + fpCnt.getCounter() + 1);
-		}
+		Code.put(obj.getLevel());
+		Code.put(obj.getLocalSymbols().size());
 	}
 
 	public void visit(MethodTypeName methodTypeName) {
@@ -573,7 +560,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 	}
 
-	public void visit(ControlCondition condition) {
+	public void visit(ControlConditionValid condition) {
 		for (Integer address : addressesToFixAfterControlCondition) {
 			Code.fixup(address);
 		}
@@ -656,7 +643,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	// Condition's helpers
 	private void processConditionFactor(int relOp, ConditionFactor conditionFactor) {
 		ConditionTerm conditionTerm = getConditionTerm(conditionFactor);
-		ControlCondition controlCondition = getControlCondition(conditionTerm);
+		ControlConditionValid controlCondition = getControlCondition(conditionTerm);
 
 		if (isLastConditionFactor(conditionFactor) && isLastConditionTerm(conditionTerm)) {
 			// (x || Y)
@@ -706,20 +693,20 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 	}
 
-	private boolean isIfCondition(ControlCondition controlCondition) {
+	private boolean isIfCondition(ControlConditionValid controlCondition) {
 		return controlCondition.getParent() instanceof IfConstruct;
 	}
 
-	private boolean isWhileCondition(ControlCondition controlCondition) {
+	private boolean isWhileCondition(ControlConditionValid controlCondition) {
 		return controlCondition.getParent() instanceof WhileConstruct;
 	}
 
-	private ControlCondition getControlCondition(ConditionTerm cond) {
+	private ControlConditionValid getControlCondition(ConditionTerm cond) {
 		SyntaxNode node = cond.getParent();
-		while (!(node instanceof ControlCondition)) {
+		while (!(node instanceof ControlConditionValid)) {
 			node = node.getParent();
 		}
-		return (ControlCondition) node;
+		return (ControlConditionValid) node;
 	}
 
 	private ConditionTerm getConditionTerm(ConditionFactor condFactor) {

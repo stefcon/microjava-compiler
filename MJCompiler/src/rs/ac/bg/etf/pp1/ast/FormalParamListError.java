@@ -1,13 +1,13 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/1/2023 13:58:22
+// 6/1/2023 22:3:2
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class SuperClassErr extends SuperClass {
+public class FormalParamListError extends FormalParamList {
 
-    public SuperClassErr () {
+    public FormalParamListError () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class SuperClassErr extends SuperClass {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("SuperClassErr(\n");
+        buffer.append("FormalParamListError(\n");
 
         buffer.append(tab);
-        buffer.append(") [SuperClassErr]");
+        buffer.append(") [FormalParamListError]");
         return buffer.toString();
     }
 }

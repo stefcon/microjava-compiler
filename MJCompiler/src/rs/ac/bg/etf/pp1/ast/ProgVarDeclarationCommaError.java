@@ -1,13 +1,13 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/1/2023 13:58:23
+// 6/1/2023 22:3:2
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class DesignatorStatementDerived1 extends DesignatorStatement {
+public class ProgVarDeclarationCommaError extends ProgVarList {
 
-    public DesignatorStatementDerived1 () {
+    public ProgVarDeclarationCommaError () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class DesignatorStatementDerived1 extends DesignatorStatement {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("DesignatorStatementDerived1(\n");
+        buffer.append("ProgVarDeclarationCommaError(\n");
 
         buffer.append(tab);
-        buffer.append(") [DesignatorStatementDerived1]");
+        buffer.append(") [ProgVarDeclarationCommaError]");
         return buffer.toString();
     }
 }

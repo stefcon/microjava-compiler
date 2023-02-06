@@ -1,13 +1,13 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/1/2023 13:58:23
+// 6/1/2023 22:3:1
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class FormalParamDeclDerived1 extends FormalParamDecl {
+public class ProgVarDeclarationSemiError extends ProgVarDeclStart {
 
-    public FormalParamDeclDerived1 () {
+    public ProgVarDeclarationSemiError () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class FormalParamDeclDerived1 extends FormalParamDecl {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("FormalParamDeclDerived1(\n");
+        buffer.append("ProgVarDeclarationSemiError(\n");
 
         buffer.append(tab);
-        buffer.append(") [FormalParamDeclDerived1]");
+        buffer.append(") [ProgVarDeclarationSemiError]");
         return buffer.toString();
     }
 }
