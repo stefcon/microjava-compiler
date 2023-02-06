@@ -1,0 +1,25 @@
+program MJProgram
+	const int cnst = 9; int x; int y, z[3];
+{
+	
+	int k () int c; {
+		c = 1;
+		return c+2;
+	}
+	
+	int main() {
+		y = 2;
+		x = y + 2;
+		y = k() + 3;
+		y++;
+		print(y);
+		print('a', 2);
+		x--;
+		print(x);
+		print(2*3);
+		print(6/2);
+		print(cnst);
+	
+		return 0;
+	}
+}

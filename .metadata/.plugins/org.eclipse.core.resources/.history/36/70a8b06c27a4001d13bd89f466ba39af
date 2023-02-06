@@ -1,0 +1,23 @@
+package rs.ac.bg.etf.pp1;
+
+import rs.etf.pp1.symboltable.*;
+import rs.etf.pp1.symboltable.concepts.*;
+
+public class ConstructorDescriptor {
+	
+	private int formalParamCount = 0;
+	private Obj constructorObj;
+	
+	ConstructorDescriptor(obj obj) {
+		constructorObj = obj;
+	}
+	
+	public int getFormalParamCount() {
+		return formalParamCount;
+	}
+	
+	public Obj getConstructorObj() {
+		return constructorObj;
+	}
+
+}

@@ -1,0 +1,58 @@
+package rs.ac.bg.etf.pp1;
+
+import rs.ac.bg.etf.pp1.ast.*;
+
+public class CounterVisitor extends VisitorAdaptor {
+
+	protected int counter = 0;
+	
+	public int getCounter() {
+		return counter;
+	}
+	
+	public static class GlobalVariableCounter extends CounterVisitor {
+		boolean isInClass = false;
+		
+		public void visit(ClassName cls) {
+			isInClass = true;
+		}
+		
+		public void visit(ClassDeclaration cls) {
+			isInClass = false;
+		}
+		
+		public void visit(ConstDeclaration cnst) {
+			if (!isInClass) counter++;
+		}
+		
+		public void visit(VarNameSingle var) {
+			if (!isInClass) counter++;
+		}
+		
+		public void visit(VarNameArray var) {
+			if (!isInClass) counter++;
+		}
+	}
+	
+	
+	public static class FormalParamCounter extends CounterVisitor {
+		public void visit(FormalParamDeclSingle formParam) {
+			counter++;
+		}
+		
+		public void visit(FormalParamDeclArray formParam) {
+			counter++;
+		}
+	}
+	
+	public static class VariableDeclarationCounter extends CounterVisitor {
+		public void visit(VarNameSingle var) {
+			counter++;
+		}
+		
+		public void visit(VarNameArray var) {
+			counter++;
+		}
+	}
+	
+}

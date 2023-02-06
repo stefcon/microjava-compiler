@@ -1,0 +1,54 @@
+program MJProgram
+	int x; int y, z[]; const int cnst = 9;
+{
+	
+	int k () int c; {
+		c = 1;
+		return c+2;
+	}
+	
+	int g(int op, int mul) {
+		return op * mul;
+	}
+	
+	int main() {
+		x = 0;
+		y = 0;
+		
+		z = new int[3];
+		z[0] = 5;
+		z[1] = 4;
+		z[2] = 10;
+		z.foreach(x=>print(x););
+		
+		x = 0;
+		while (x < 2) {
+			print(x);
+			x++;
+			if (x == 2) break;
+			
+			continue;
+			
+			y--;
+		}
+		print(y);
+		print(x);
+		
+		if (x != 2 || true && x < 3) {
+			print('y');
+		}
+		else {
+			print('n');
+		}
+		
+		// if (true) {
+		//	x++;
+		// }
+		// print(x);
+		
+		print(g(2, 4));
+		
+
+		return 0;
+	}
+}

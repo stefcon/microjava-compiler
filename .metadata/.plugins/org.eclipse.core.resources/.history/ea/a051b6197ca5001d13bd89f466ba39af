@@ -1,0 +1,20 @@
+program list
+
+const int A = 15342, C = 40000;
+const int RAND_MAX = 100000;
+
+class Node {
+	int data;
+	//Node next;
+	{
+	}
+}
+
+int seed;
+
+{
+	void main() int i; {
+	
+	}
+
+}

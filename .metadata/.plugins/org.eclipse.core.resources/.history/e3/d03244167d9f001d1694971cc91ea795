@@ -1,0 +1,129 @@
+package rs.ac.bg.etf.pp1;
+
+import org.apache.log4j.Logger;
+
+import java.util.ArrayList;
+
+import rs.ac.bg.etf.pp1.ast.*;
+import rs.etf.pp1.symboltable.*;
+import rs.etf.pp1.symboltable.concepts.*;
+
+public class SemanticAnalyzer extends VisitorAdaptor {
+	
+	public static Struct boolType = Tab.insert(Obj.Type, "bool", new Struct(Struct.Bool)).getType();
+
+	private int nVars;
+	private boolean isMainDefined = false;
+
+	private boolean isProgDeclaration = false;
+	private Struct declarationType = null;
+
+	private ArrayList<Struct> currentlyDeclaredVariables = new ArrayList<>();
+
+	Logger log = Logger.getLogger(getClass());
+
+	private boolean errorDetected = false;
+
+	public void report_error(String message, SyntaxNode info) {
+		errorDetected = true;
+		StringBuilder msg = new StringBuilder(message);
+		int line = (info == null) ? 0 : info.getLine();
+		if (line != 0)
+			msg.append(" na liniji ").append(line);
+		log.error(msg.toString());
+	}
+
+	public void report_info(String message, SyntaxNode info) {
+		StringBuilder msg = new StringBuilder(message);
+		int line = (info == null) ? 0 : info.getLine();
+		if (line != 0)
+			msg.append(" na liniji ").append(line);
+		log.info(msg.toString());
+	}
+
+	public void visit(Program program) {
+		if (!isMainDefined) {
+			report_info("Semanticka greska: Program mora imati definisanu main() metodu!", program);
+		}
+		nVars = Tab.currentScope.getnVars();
+		Tab.chainLocalSymbols(program.getProgName().obj);
+		Tab.closeScope();
+	}
+
+	public void visit(ProgName progName) {
+		progName.obj = Tab.insert(Obj.Prog, progName.getPName(), Tab.noType);
+		Tab.openScope();
+	}
+
+	public void visit(ProgVarType type) {
+		isProgDeclaration = true;
+	}
+	
+	public void visit(ConstDeclaration constDecl) {
+		if (Tab.find(constDecl.getConstName()) != Tab.noObj) {
+			report_error("Semanticka greska: Konstanta " + constDecl.getConstName() + " je vec deklarisana!", constDecl);
+			return;
+		}
+		if (constDecl.getConstType().struct.assignableTo(declarationType)) {
+			// TODO: U 4. fazi dodeli odgovarajucu vrednost konstanti!
+			Tab.insert(Obj.Con, constDecl.getConstName(), declarationType);
+			report_info("Definisana const", constDecl);
+		}
+		else {
+			report_error("Semanticka greska: Tip konstante i dodeljena vrednost su nekompatibilne!", constDecl);
+		}
+	}
+	
+
+	public void visit(VarNameSingle var) {
+		Obj obj = Tab.find(var.getVarName());
+		if (obj == Tab.noObj || obj.getLevel() == 0 && !isProgDeclaration) {
+			Tab.insert(Obj.Var, var.getVarName(), declarationType);
+			report_info("Definicija lokalne promenljive metode", var);
+		}
+		else {
+			report_error("Semanticka greska: Varijabla " + var.getVarName() + " je vec deklarisana!", var);
+		}
+	}
+
+	public void visit(VarNameArray var) {
+		Obj obj = Tab.find(var.getVarName());
+		if (Tab.find(var.getVarName()) != Tab.noObj) {
+			report_error("Semanticka greska: Varijabla " + var.getVarName() + " je vec deklarisana!", var);
+			return;
+		}
+		if (obj == Tab.noObj || obj.getLevel() == 0 && !isProgDeclaration) {
+			Tab.insert(Obj.Var, var.getVarName(), new Struct(Struct.Array, declarationType));
+			report_info("Definicija lokalne promenljive metode", var);
+		}
+	}
+
+	public void visit(Type type) {
+		Obj typeObj = Tab.find(type.getTypeName());
+		if (typeObj == Tab.noObj) {
+			report_error("Semanticka greska: Nije pronadjen tip" + type.getTypeName() + "u tabeli simbola!", null);
+			type.struct = Tab.noType;
+			declarationType = Tab.noType;
+		} else if (Obj.Type == typeObj.getKind()) {
+			type.struct = typeObj.getType();
+			declarationType = typeObj.getType();
+		} else {
+			report_error("Semanticka greska: " + type.getTypeName() + "ne predstavlja nijedan postojeci tip!", type);
+			type.struct = Tab.noType;
+			declarationType = Tab.noType;
+		}
+	}
+	
+	public void visit(ConstIntType cnstInt) {
+		cnstInt.struct = Tab.intType;
+	}
+	
+	public void visit(ConstCharType cnstChar) {
+		cnstChar.struct = Tab.charType;
+	}
+	
+	public void visit(ConstBoolType cnstBool) {
+		cnstBool.struct = boolType;
+	}
+
+}

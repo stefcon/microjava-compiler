@@ -77,7 +77,6 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 
 	/* TVF table */
-	// TODO:
 	private void addTvfConstant(int value, int num) {
 		Code.loadConst(value);
 		Code.put(Code.putstatic);
@@ -229,7 +228,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 	}
 
-	// New Operators TODO: Class
+	// New Operators
 	private int calculateTypeSize(Struct type) {
 		int size = 0;
 		for (Obj member : type.getMembers()) {
@@ -351,7 +350,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 	}
 
-	// TODO: Probaby not needed
+	// Probaby not needed
 	private int isPartOfDesignatorListStmt(Designator designator) {
 		if (designator.getParent() instanceof DesignatorReal) {
 			// Left side of assignemnt
@@ -535,21 +534,18 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(ElseKeyWord elseKeyWord) {
 		Code.putJump(0);
 		addressesToFixAfterIfMatched.peek().add(Code.pc - 2);
-//		addressesToFixAfterElseOrUnmatched.pop().forEach(Code::fixup);
 		for (Integer address : addressesToFixAfterElseOrUnmatched.pop()) {
 			Code.fixup(address);
 		}
 	}
 
 	public void visit(IfElseStatement ifStatement) {
-//		addressesToFixAfterIfMatched.pop().forEach(Code::fixup);
 		for (Integer address : addressesToFixAfterIfMatched.pop()) {
 			Code.fixup(address);
 		}
 	}
 
 	public void visit(IfStatement ifStatement) {
-//		addressesToFixAfterElseOrUnmatched.pop().forEach(Code::fixup);
 		for (Integer address : addressesToFixAfterElseOrUnmatched.pop()) {
 			Code.fixup(address);
 		}
@@ -562,14 +558,12 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	public void visit(WhileStatement whileStatement) {
 		Code.putJump(loopStartAddressStack.pop());
-//		addressesToFixAfterLoop.pop().forEach(Code::fixup);
 		for (Integer address : addressesToFixAfterLoop.pop()) {
 			Code.fixup(address);
 		}
 	}
 
 	public void visit(ControlCondition condition) {
-//		addressesToFixAfterControlCondition.forEach(Code::fixup);
 		for (Integer address : addressesToFixAfterControlCondition) {
 			Code.fixup(address);
 		}
@@ -616,7 +610,6 @@ public class CodeGenerator extends VisitorAdaptor {
 		Code.put(Code.add); // Stack: ...,adr, ind + 1
 
 		Code.putJump(loopStartAddressStack.pop());
-//		addressesToFixAfterLoop.pop().forEach(Code::fixup);
 		for (Integer address : addressesToFixAfterLoop.pop()) {
 			Code.fixup(address);
 		}
@@ -627,7 +620,6 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 
 	public void visit(OrKeyWord orKeyWord) {
-//		addressesToFixAfterOr.forEach(Code::fixup);
 		for (Integer address : addressesToFixAfterOr) {
 			Code.fixup(address);
 		}

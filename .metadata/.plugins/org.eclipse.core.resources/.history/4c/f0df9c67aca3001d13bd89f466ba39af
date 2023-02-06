@@ -1,0 +1,40 @@
+program MJProgram
+	int x; int y, z[]; const int cnst = 9;
+{
+	
+	int k () int c; {
+		c = 1;
+		return c+2;
+	}
+	
+	int main() {
+		x = 0;
+		y = 0;
+		while (x < 2) {
+			print(x);
+			x++;
+			if (x == 2) break;
+			
+			continue;
+			
+			y--;
+		}
+		print(y);
+		print(x);
+		
+		if (x != 2 || true && x < 3) {
+			print('y');
+		}
+		else {
+			print('n');
+		}
+		
+		// if (true) {
+		//	x++;
+		// }
+		// print(x);
+		
+
+		return 0;
+	}
+}

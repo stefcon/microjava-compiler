@@ -80,7 +80,6 @@ public class MJParserTest {
 	        			semanticCheck.getGlobalFunctions(),
 	        			semanticCheck.getClassConstructorsMap());
 	        	prog.traverseBottomUp(codeGenerator);
-//	        	Code.dataSize = semanticCheck.getNVars();
 	        	Code.mainPc = codeGenerator.getMainPc();
 	        	Code.write(new FileOutputStream(objFile));
 	        	log.info("Parsiranje uspesno zavrseno!");

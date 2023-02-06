@@ -1,0 +1,42 @@
+program MJProgram
+	int x; int y, z[]; const int cnst = 9;
+	
+	class B {}
+	
+	class C {
+		int num;
+	
+		{
+			void m(int par) {
+				return num * par;
+			}
+		}
+	}
+	
+{
+	
+	int k () int c; {
+		c = 1;
+		return c+2;
+	}
+	
+	int g(int op, int mul) {
+		return op * mul;
+	}
+	
+	int main() C obj_c; {
+		x = 0;
+		y = 0;
+		
+		
+		obj_c = new C();
+		obj_c.num = 3;
+		print(obj_c.num);
+		
+		x = obj_c.m(4);
+		print(x);
+		
+
+		return 0;
+	}
+}
