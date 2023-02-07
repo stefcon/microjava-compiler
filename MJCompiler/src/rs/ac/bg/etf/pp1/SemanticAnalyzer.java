@@ -29,7 +29,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
 	private Obj currentClass = null;
 	private ArrayList<Obj> classList = new ArrayList<>();
-	private ArrayList<Obj> constructorCallsList = new ArrayList<>();
 
 	private ArrayList<Obj> currentClassConstructors = new ArrayList<>();
 	private Map<String, List<Obj>> classConstructorsMap = new HashMap<>();
@@ -45,10 +44,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	private Stack<ArrayList<Struct>> actualParametersListStack = new Stack<>();
 	private Struct returnType = null;
 
-	private boolean isProgDeclaration = false;
 	private Struct declarationType = null;
-
-	private ArrayList<Struct> currentlyDeclaredVariables = new ArrayList<>();
 
 	private int loopDepth = 0;
 
@@ -113,15 +109,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	public void visit(ProgName progName) {
 		progName.obj = Tab.insert(Obj.Prog, progName.getPName(), Tab.noType);
 		Tab.openScope();
-	}
-
-	public void visit(ProgVarType type) {
-		isProgDeclaration = true;
-	}
-
-	public void visit(ProgVarDeclarationStart progVarDeclaration) {
-		isProgDeclaration = false;
-		declarationType = null;
 	}
 
 	public void visit(ConstDeclaration constDecl) {
@@ -584,7 +571,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			if (!expressionStruct.assignableTo(designatorStruct)) {
 				report_error("Semanticka greska: Izraz je nemoguce dodeliti dezignatoru", ass);
 			} else {
-				int kind = ass.getDesignator().obj.getKind();
 				if (designatorKind != Obj.Var && designatorKind != Obj.Fld && designatorKind != Obj.Elem) {
 					report_error("Semanticka greska: Dezignatoru se ne moze dodeliti nova vrednost", ass);
 				}
@@ -634,7 +620,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		} else {
 			Struct designatorElementType = designatorType.getElemType();
 			for (Struct designatorListElementType : designatorListTypes) {
-				// TODO: verovatno treba dodati klase
 				if (!designatorElementType.assignableTo(designatorListElementType) 
 					&& !checkIfSubclass(designatorListElementType, designatorElementType)) {
 					report_error("Semanticka greska: nekompatibilan tip u okviru liste dezignatora",
