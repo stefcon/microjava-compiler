@@ -130,7 +130,7 @@ nonterminal Addop Addop;
 nonterminal Mulop Mulop; 	
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Program, ProgName, Designator, ForIdent, ConstType;
-nonterminal rs.etf.pp1.symboltable.concepts.Obj ClassName, ConstructorDeclStart, MethodDecl, MethodTypeAndName; 
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ClassName, ConstructorDeclStart, MethodDeclaration, MethodTypeAndName; 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Term, Expr, AssignmentStatementExpr, Factor, VarName;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct FunctionCall, Condition, ConditionTerm, ConditionFactor; 
 
@@ -148,7 +148,7 @@ ProgName ::= (ProgName) IDENT:pName {: RESULT=new ProgName(pName); RESULT.setLin
 
 ProgDeclList ::= (ProgListConst) ProgDeclList:P1 ConstDeclStart:C2 {: RESULT=new ProgListConst(P1, C2); RESULT.setLine(P1left); :} 
 				 |
-				 (ProgListVar) ProgDeclList:P1 ProgVarDeclStart:P2 {: RESULT=new ProgListVar(P1, P2); RESULT.setLine(P1left); :} /* bilo je list */
+				 (ProgListVar) ProgDeclList:P1 ProgVarDeclStart:P2 {: RESULT=new ProgListVar(P1, P2); RESULT.setLine(P1left); :}
 				 |
 				 (ProgListClass) ProgDeclList:P1 ProgClassDecl:P2 {: RESULT=new ProgListClass(P1, P2); RESULT.setLine(P1left); :}
 				 |
@@ -179,17 +179,18 @@ ConstType ::= (ConstIntType) NUMBER:N1 {: RESULT=new ConstIntType(N1); RESULT.se
 			   
 VarDeclStart ::= (VarDeclarationStart) Type:T1 VarList:V2 SEMI {: RESULT=new VarDeclarationStart(T1, V2); RESULT.setLine(T1left); :}
 				 |
-				 (VarDeclarationSemiError) error SEMI {: RESULT=new VarDeclarationSemiError(); :}
- 				 |
- 				 (VarDeclarationBracketError) error LBRACE {: RESULT=new VarDeclarationBracketError(); :}
+				 (VarDeclarationSemiError) error SEMI:l
+				 {: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :} {: RESULT=new VarDeclarationSemiError(); :}
 				 ;
 
 
-VarList ::= (VarDeclarationList) VarList:V1 COMMA VarName:V2 {: RESULT=new VarDeclarationList(V1, V2); RESULT.setLine(V1left); :}
+VarList ::= (VarDeclarationList) VarName:V1 COMMA VarList:V2 {: RESULT=new VarDeclarationList(V1, V2); RESULT.setLine(V1left); :}
 		    |
 		    (BaseVarDeclarationList) VarName:V1 {: RESULT=new BaseVarDeclarationList(V1); RESULT.setLine(V1left); :}
 		    |
-			(VarDeclarationCommaError) error COMMA {: RESULT=new VarDeclarationCommaError(); :}
+			(VarDeclarationCommaError) error COMMA:l
+			{: parser.report_error("Oporavak od greske do , na liniji " + lleft, null); :}
+			VarList:V1 {: RESULT=new VarDeclarationCommaError(V1); RESULT.setLine(V1left); :}
 		    ;
 		    
 VarName ::= (VarNameSingle) IDENT:varName {: RESULT=new VarNameSingle(varName); RESULT.setLine(varNameleft); :}
@@ -200,14 +201,15 @@ VarName ::= (VarNameSingle) IDENT:varName {: RESULT=new VarNameSingle(varName); 
 		     
 VarDeclList ::= (VarDeclarations) VarDeclList:V1 VarDeclStart:V2 {: RESULT=new VarDeclarations(V1, V2); RESULT.setLine(V1left); :}
 				|
-				(NoVarDecl) {: RESULT=new NoVarDecl(); :}/* epsilon */ 
+				(NoVarDecl) {: RESULT=new NoVarDecl(); :}/* epsilon */
 				;		
 
 			   
 			   
 ProgVarDeclStart ::= (ProgVarDeclarationStart) ProgVarType:P1 ProgVarList:P2 SEMI {: RESULT=new ProgVarDeclarationStart(P1, P2); RESULT.setLine(P1left); :} 
 					 |
-					 (ProgVarDeclarationSemiError) error:l SEMI {: RESULT=new ProgVarDeclarationSemiError(); :}
+					 (ProgVarDeclarationSemiError) error SEMI:l
+					 {: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :} {: RESULT=new ProgVarDeclarationSemiError(); :}
 					 ;
 
 
@@ -216,31 +218,31 @@ ProgVarType ::= (ProgVarType) Type:T1 {: RESULT=new ProgVarType(T1); RESULT.setL
 ;
 
 
-ProgVarList ::= (ProgVarListRec) ProgVarList:P1 COMMA ProgVarDeclaration:P2 {: RESULT=new ProgVarListRec(P1, P2); RESULT.setLine(P1left); :}
+ProgVarList ::= (ProgVarListRec) ProgVarDeclaration:P1 COMMA ProgVarList:P2 {: RESULT=new ProgVarListRec(P1, P2); RESULT.setLine(P1left); :}
 				|
 				(BaseProgVarDeclaration) ProgVarDeclaration:P1 {: RESULT=new BaseProgVarDeclaration(P1); RESULT.setLine(P1left); :}
 				|
-				(ProgVarDeclarationCommaError) error:l COMMA {: RESULT=new ProgVarDeclarationCommaError(); :}
+				(ProgVarDeclarationCommaError) error COMMA:l
+				{: parser.report_error("Oporavak od greske do , na liniji " + lleft, null); :}
+				ProgVarList:P1 {: RESULT=new ProgVarDeclarationCommaError(P1); RESULT.setLine(P1left); :}
 				;
 				
 ProgVarDeclaration ::= (ProgVar) VarName:V1 {: RESULT=new ProgVar(V1); RESULT.setLine(V1left); :}
 ;
 
 
-ProgClassDecl ::= (ClassDeclaration) ClassName:C1 OptionalClassExtends:O2 LBRACE VarDeclList:V3 OptionalClassMethodDecl:O4 RBRACE {: RESULT=new ClassDeclaration(C1, O2, V3, O4); RESULT.setLine(C1left); :}
-				  |
-				  (ClassDeclarationError) ClassName:C1 error VarDeclList:V2 OptionalClassMethodDecl:O3 RBRACE {: RESULT=new ClassDeclarationError(C1, V2, O3); RESULT.setLine(C1left); :}
-				  ;
+ProgClassDecl ::= (ClassDeclaration) ClassName:C1 OptionalClassExtends:O2 VarDeclList:V3 OptionalClassMethodDecl:O4 RBRACE {: RESULT=new ClassDeclaration(C1, O2, V3, O4); RESULT.setLine(C1left); :}
+;
 
 ClassName ::= (ClassName) CLASS IDENT:name {: RESULT=new ClassName(name); RESULT.setLine(nameleft); :}
 ;
 
-OptionalClassExtends ::= (ClassExtends) EXT SuperClass:S1 {: RESULT=new ClassExtends(S1); RESULT.setLine(S1left); :}
+OptionalClassExtends ::= (ClassExtends) EXT SuperClass:S1 LBRACE {: RESULT=new ClassExtends(S1); RESULT.setLine(S1left); :}
 						 |
-						 (NoClassExtends) {: RESULT=new NoClassExtends(); :} /* epsilon */
+						 (NoClassExtends) /* epsilon */ LBRACE {: RESULT=new NoClassExtends(); :}
 						 |
-						 (ClassExtendsError) EXT error:l 
-						 {: parser.report_error("Sintaksna greska: greska prilikom definisanja natklase na liniji: " + lleft, null); :} LBRACE {: RESULT=new ClassExtendsError(); :}
+						 (ExtendsError) error LBRACE:l
+						 {: parser.report_error("Oporavak od greske do LBRACE u liniji " + lleft, null); :} {: RESULT=new ExtendsError(); :}
 						 ;
 
 SuperClass ::= (SuperClassIdent) IDENT:name {: RESULT=new SuperClassIdent(name); RESULT.setLine(nameleft); :}
@@ -272,13 +274,16 @@ OptionalMethodDeclList ::= (MethodDeclListExists) MethodDeclList:M1 {: RESULT=ne
 							;
 
 
-MethodDeclList ::= (MethodDeclarations) MethodDeclList:M1 MethodDecl:M2 {: RESULT=new MethodDeclarations(M1, M2); RESULT.setLine(M1left); :}
+MethodDeclList ::= (MethodDeclarations) MethodDeclList:M1 MethodDeclaration:M2 {: RESULT=new MethodDeclarations(M1, M2); RESULT.setLine(M1left); :}
 				   |
-				   (MethodDeclSingle) MethodDecl:M1 {: RESULT=new MethodDeclSingle(M1); RESULT.setLine(M1left); :}
+				   (MethodDeclSingle) MethodDeclaration:M1 {: RESULT=new MethodDeclSingle(M1); RESULT.setLine(M1left); :}
 				   ;
 
-MethodDecl ::= (MethodDecl) MethodTypeAndName:M1 LPAREN FormalParams:F2 RPAREN VarDeclList:V3 LBRACE OptionalStatementList:O4 RBRACE {: RESULT=new MethodDecl(M1, F2, V3, O4); RESULT.setLine(M1left); :} 
-;
+MethodDeclaration ::= (MethodDecl) MethodTypeAndName:M1 LPAREN FormalParams:F2 RPAREN VarDeclList:V3 LBRACE OptionalStatementList:O4 RBRACE {: RESULT=new MethodDecl(M1, F2, V3, O4); RESULT.setLine(M1left); :} 
+					  |
+					  (MethodDeclError) MethodTypeAndName:M1 LPAREN error RPAREN:l VarDeclList:V2 LBRACE OptionalStatementList:O3 RBRACE
+					  {: parser.report_error("Oporavak od greske do RPAREN na liniji " + lleft, null); :} {: RESULT=new MethodDeclError(M1, V2, O3); RESULT.setLine(M1left); :}
+					  ;
 
 MethodTypeAndName ::= (MethodTypeName) Type:retType IDENT:methName {: RESULT=new MethodTypeName(retType, methName); RESULT.setLine(retTypeleft); :}
 					  |
@@ -291,11 +296,13 @@ FormalParams ::= (OptFormalParams) FormalParamList:F1 {: RESULT=new OptFormalPar
 			     (NoFormalParam) {: RESULT=new NoFormalParam(); :} /* epsilon */
 			     ;
 
-FormalParamList ::= (FormalParamDecls) FormalParamList:F1 COMMA FormalParamDecl:F2 {: RESULT=new FormalParamDecls(F1, F2); RESULT.setLine(F1left); :}
+FormalParamList ::= (FormalParamDecls) FormalParamDecl:F1 COMMA FormalParamList:F2 {: RESULT=new FormalParamDecls(F1, F2); RESULT.setLine(F1left); :}
 					|
 					(SingleFormalParamDecl) FormalParamDecl:F1 {: RESULT=new SingleFormalParamDecl(F1); RESULT.setLine(F1left); :}
 					|
-					(FormalParamListError) error:l {: parser.report_error("Sintaksna greska: greska prilikom pisanja formalnih parametara na liniji " + lleft, null); :} COMMA {: RESULT=new FormalParamListError(); :}
+					(FormalParamListError) error COMMA:l
+					{: parser.report_error("Oporavak od greske do , na liniji " + lleft, null); :}
+				    FormalParamList:F1 {: RESULT=new FormalParamListError(F1); RESULT.setLine(F1left); :}
 					;
 					
 FormalParamDecl ::= (FormalParamDeclSingle) Type:paramType IDENT:name {: RESULT=new FormalParamDeclSingle(paramType, name); RESULT.setLine(paramTypeleft); :}
@@ -342,7 +349,8 @@ Statement ::= (DesignatorStatementStmt) DesignatorStatement:D1 SEMI {: RESULT=ne
 			  |
 			  (BlockStatement) LBRACE OptionalStatementList:O1 RBRACE {: RESULT=new BlockStatement(O1); RESULT.setLine(O1left); :}
 			  |
-			  (DesignatorAssignmentError) Designator:D1 ASSIGN error:l {: parser.report_error("Sintaksna greska: greska pri dodeli na liniji: " + lleft, null); :} SEMI {: RESULT=new DesignatorAssignmentError(D1); RESULT.setLine(D1left); :}
+			  (StatementError) error SEMI:l
+			  {: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :} {: RESULT=new StatementError(); :} 
 			  ;
 
 			  
@@ -376,7 +384,8 @@ ForeachDesignator ::= (ForeachDesignator) Designator:D1 DOT {: RESULT=new Foreac
 
 ControlCondition ::= (ControlConditionValid) LPAREN Condition:C1 RPAREN {: RESULT=new ControlConditionValid(C1); RESULT.setLine(C1left); :}
 					 |
-					 (ControlConditionError) LPAREN error:l {: parser.report_error("Sintaksna greska: greksa pri pisanju uslovnog izraza na liniji: " + lleft, null); :} RPAREN {: RESULT=new ControlConditionError(); :}
+					 (ControlConditionError) LPAREN error:l RPAREN
+					 {: parser.report_error("Oporavak od greske do RPAREN na liniji " + lleft, null); :} {: RESULT=new ControlConditionError(); :}
 					 ;
 
 
@@ -430,7 +439,7 @@ DesignatorListStart ::= (DesignatorListStart) DesignatorListStartDummy:D1 LBRACK
 DesignatorListStartDummy ::= (DesignatorListStartDummy) {: RESULT=new DesignatorListStartDummy(); :} /* epsilon */
 ; 
 
-DesignatorListContent ::= (DesignatorListCommaElem) DesignatorListContent:D1 COMMA DesignatorDummy:D2 {: RESULT=new DesignatorListCommaElem(D1, D2); RESULT.setLine(D1left); :}
+DesignatorListContent ::= (DesignatorListCommaElem) DesignatorDummy:D1 COMMA DesignatorListContent:D2 {: RESULT=new DesignatorListCommaElem(D1, D2); RESULT.setLine(D1left); :}
 						  |
 						  (DesignatorListDummy) DesignatorDummy:D1 {: RESULT=new DesignatorListDummy(D1); RESULT.setLine(D1left); :}
 						  ;

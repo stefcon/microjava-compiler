@@ -1,13 +1,13 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/1/2023 22:13:11
+// 7/1/2023 14:26:37
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ClassExtendsError extends OptionalClassExtends {
+public class StatementError extends Statement {
 
-    public ClassExtendsError () {
+    public StatementError () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class ClassExtendsError extends OptionalClassExtends {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ClassExtendsError(\n");
+        buffer.append("StatementError(\n");
 
         buffer.append(tab);
-        buffer.append(") [ClassExtendsError]");
+        buffer.append(") [StatementError]");
         return buffer.toString();
     }
 }

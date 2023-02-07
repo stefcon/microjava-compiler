@@ -1,0 +1,851 @@
+INFO  14:29:59,629 - Compiling source file: C:\Users\stefc\Fakultet_lokal\PP1\pp1lab.templateAST\workspace\MJCompiler\test\program2.mj
+INFO  14:29:59,801 - #2 program
+INFO  14:29:59,801 - #30 MJProgram
+INFO  14:29:59,801 - #26 const
+INFO  14:29:59,803 - #30 int
+INFO  14:29:59,803 - #30 cnst
+INFO  14:29:59,804 - #3 =
+INFO  14:29:59,805 - #27 9
+INFO  14:29:59,805 - #10 ;
+INFO  14:29:59,806 - #30 int
+INFO  14:29:59,806 - #30 x
+INFO  14:29:59,807 - #10 ;
+INFO  14:29:59,808 - #30 int
+INFO  14:29:59,808 - #30 y
+INFO  14:29:59,808 - #11 ,
+INFO  14:29:59,808 - #30 z
+INFO  14:29:59,808 - #4 [
+INFO  14:29:59,809 - #5 ]
+INFO  14:29:59,809 - #10 ;
+INFO  14:29:59,809 - #46 class
+INFO  14:29:59,809 - #30 B
+INFO  14:29:59,809 - #6 {
+INFO  14:29:59,811 - #30 int
+INFO  14:29:59,813 - #30 num
+INFO  14:29:59,813 - #10 ;
+INFO  14:29:59,813 - #6 {
+INFO  14:29:59,814 - #30 int
+INFO  14:29:59,815 - #30 m
+INFO  14:29:59,815 - #8 (
+INFO  14:29:59,815 - #30 int
+INFO  14:29:59,815 - #30 par
+INFO  14:29:59,815 - #9 )
+INFO  14:29:59,815 - #6 {
+INFO  14:29:59,815 - #25 return
+INFO  14:29:59,815 - #30 par
+INFO  14:29:59,816 - #10 ;
+INFO  14:29:59,816 - #7 }
+INFO  14:29:59,816 - #7 }
+INFO  14:29:59,816 - #7 }
+INFO  14:29:59,816 - #46 class
+INFO  14:29:59,817 - #30 C
+INFO  14:29:59,817 - #47 extends
+INFO  14:29:59,817 - #30 B
+INFO  14:29:59,817 - #6 {
+INFO  14:29:59,817 - #6 {
+INFO  14:29:59,817 - #30 C
+INFO  14:29:59,817 - #8 (
+INFO  14:29:59,817 - #30 int
+INFO  14:29:59,817 - #30 number
+INFO  14:29:59,817 - #9 )
+INFO  14:29:59,817 - #6 {
+INFO  14:29:59,817 - #30 this
+INFO  14:29:59,818 - #12 .
+INFO  14:29:59,818 - #30 num
+INFO  14:29:59,818 - #3 =
+INFO  14:29:59,818 - #30 number
+INFO  14:29:59,818 - #10 ;
+INFO  14:29:59,818 - #7 }
+INFO  14:29:59,818 - #30 int
+INFO  14:29:59,819 - #30 m
+INFO  14:29:59,819 - #8 (
+INFO  14:29:59,819 - #30 int
+INFO  14:29:59,819 - #30 par
+INFO  14:29:59,819 - #9 )
+INFO  14:29:59,819 - #6 {
+INFO  14:29:59,819 - #25 return
+INFO  14:29:59,820 - #30 num
+INFO  14:29:59,820 - #35 *
+INFO  14:29:59,820 - #30 par
+INFO  14:29:59,822 - #10 ;
+INFO  14:29:59,822 - #7 }
+INFO  14:29:59,822 - #7 }
+INFO  14:29:59,822 - #7 }
+INFO  14:29:59,822 - #6 {
+INFO  14:29:59,822 - #30 int
+INFO  14:29:59,823 - #30 k
+INFO  14:29:59,823 - #8 (
+INFO  14:29:59,823 - #9 )
+INFO  14:29:59,824 - #30 int
+INFO  14:29:59,824 - #30 c
+INFO  14:29:59,824 - #10 ;
+INFO  14:29:59,824 - #6 {
+INFO  14:29:59,824 - #30 c
+INFO  14:29:59,824 - #3 =
+INFO  14:29:59,824 - #27 1
+INFO  14:29:59,824 - #10 ;
+INFO  14:29:59,824 - #25 return
+INFO  14:29:59,824 - #30 c
+INFO  14:29:59,824 - #31 +
+INFO  14:29:59,824 - #27 2
+INFO  14:29:59,827 - #10 ;
+INFO  14:29:59,827 - #7 }
+INFO  14:29:59,827 - #30 int
+INFO  14:29:59,827 - #30 g
+INFO  14:29:59,827 - #8 (
+INFO  14:29:59,827 - #30 int
+INFO  14:29:59,827 - #30 op
+INFO  14:29:59,827 - #11 ,
+INFO  14:29:59,827 - #30 int
+INFO  14:29:59,827 - #30 mul
+INFO  14:29:59,828 - #9 )
+INFO  14:29:59,828 - #6 {
+INFO  14:29:59,828 - #25 return
+INFO  14:29:59,828 - #30 op
+INFO  14:29:59,828 - #35 *
+INFO  14:29:59,828 - #30 mul
+INFO  14:29:59,828 - #10 ;
+INFO  14:29:59,828 - #7 }
+INFO  14:29:59,828 - #30 int
+INFO  14:29:59,829 - #30 main
+INFO  14:29:59,829 - #8 (
+INFO  14:29:59,829 - #9 )
+INFO  14:29:59,829 - #30 B
+INFO  14:29:59,829 - #30 obj_c
+INFO  14:29:59,829 - #10 ;
+INFO  14:29:59,829 - #30 bool
+INFO  14:29:59,829 - #30 b
+INFO  14:29:59,829 - #10 ;
+INFO  14:29:59,829 - #6 {
+INFO  14:29:59,829 - #30 x
+INFO  14:29:59,830 - #3 =
+INFO  14:29:59,830 - #27 0
+INFO  14:29:59,830 - #10 ;
+INFO  14:29:59,830 - #30 y
+INFO  14:29:59,830 - #3 =
+INFO  14:29:59,830 - #27 0
+INFO  14:29:59,830 - #10 ;
+INFO  14:29:59,830 - #30 obj_c
+INFO  14:29:59,830 - #3 =
+INFO  14:29:59,830 - #17 new
+INFO  14:29:59,830 - #30 C
+INFO  14:29:59,830 - #8 (
+INFO  14:29:59,832 - #27 4
+INFO  14:29:59,832 - #9 )
+INFO  14:29:59,834 - #10 ;
+INFO  14:29:59,834 - #15 print
+INFO  14:29:59,834 - #8 (
+INFO  14:29:59,834 - #30 obj_c
+INFO  14:29:59,834 - #12 .
+INFO  14:29:59,834 - #30 num
+INFO  14:29:59,834 - #9 )
+INFO  14:29:59,834 - #10 ;
+INFO  14:29:59,834 - #30 x
+INFO  14:29:59,834 - #3 =
+INFO  14:29:59,834 - #30 obj_c
+INFO  14:29:59,834 - #12 .
+INFO  14:29:59,834 - #30 m
+INFO  14:29:59,835 - #8 (
+INFO  14:29:59,835 - #27 4
+INFO  14:29:59,836 - #9 )
+INFO  14:29:59,836 - #10 ;
+INFO  14:29:59,837 - #15 print
+INFO  14:29:59,838 - #8 (
+INFO  14:29:59,838 - #30 x
+INFO  14:29:59,838 - #9 )
+INFO  14:29:59,838 - #10 ;
+INFO  14:29:59,838 - #21 if
+INFO  14:29:59,838 - #8 (
+INFO  14:29:59,839 - #30 obj_c
+INFO  14:29:59,839 - #38 ==
+INFO  14:29:59,839 - #30 obj_c
+INFO  14:29:59,841 - #9 )
+INFO  14:29:59,842 - #6 {
+INFO  14:29:59,842 - #15 print
+INFO  14:29:59,842 - #8 (
+INFO  14:29:59,842 - #28 y
+INFO  14:29:59,842 - #9 )
+INFO  14:29:59,842 - #10 ;
+INFO  14:29:59,842 - #7 }
+INFO  14:29:59,842 - #30 b
+INFO  14:29:59,844 - #3 =
+INFO  14:29:59,844 - #29 false
+INFO  14:29:59,844 - #10 ;
+INFO  14:29:59,844 - #15 print
+INFO  14:29:59,844 - #8 (
+INFO  14:29:59,844 - #30 b
+INFO  14:29:59,844 - #9 )
+INFO  14:29:59,844 - #10 ;
+INFO  14:29:59,844 - #25 return
+INFO  14:29:59,844 - #27 0
+INFO  14:29:59,844 - #10 ;
+INFO  14:29:59,845 - #7 }
+INFO  14:29:59,845 - #7 }
+INFO  14:29:59,856 - Definisana const na liniji 2
+INFO  14:29:59,856 - Definicija promenljive x na liniji 2
+INFO  14:29:59,856 - Definicija promenljive y na liniji 2
+INFO  14:29:59,856 - Definicija niz promenljive z na liniji 2
+INFO  14:29:59,856 - Definicija polja num na liniji 5
+INFO  14:29:59,856 - Dodat je podrazumevani konstruktor za klasu B na liniji 4
+INFO  14:29:59,857 - Dodat je podrazumevani konstruktor za klasu C na liniji 13
+INFO  14:29:59,857 - Definicija promenljive c na liniji 28
+INFO  14:29:59,857 - Definicija promenljive obj_c na liniji 37
+INFO  14:29:59,857 - Definicija promenljive b na liniji 37
+INFO  14:29:59,859 - ===============================
+INFO  14:29:59,861 - Program(
+  ProgName(
+   MJProgram
+  ) [ProgName]
+  ProgListClass(
+    ProgListClass(
+      ProgListVar(
+        ProgListVar(
+          ProgListConst(
+            NoProgDeclList(
+            ) [NoProgDeclList]
+            ConstDeclarationStart(
+              Type(
+               int
+              ) [Type]
+              BaseConstDeclarationList(
+                ConstDeclaration(
+                 cnst
+                  ConstIntType(
+                   9
+                  ) [ConstIntType]
+                ) [ConstDeclaration]
+              ) [BaseConstDeclarationList]
+            ) [ConstDeclarationStart]
+          ) [ProgListConst]
+          ProgVarDeclarationStart(
+            ProgVarType(
+              Type(
+               int
+              ) [Type]
+            ) [ProgVarType]
+            BaseProgVarDeclaration(
+              ProgVar(
+                VarNameSingle(
+                 x
+                ) [VarNameSingle]
+              ) [ProgVar]
+            ) [BaseProgVarDeclaration]
+          ) [ProgVarDeclarationStart]
+        ) [ProgListVar]
+        ProgVarDeclarationStart(
+          ProgVarType(
+            Type(
+             int
+            ) [Type]
+          ) [ProgVarType]
+          ProgVarListRec(
+            ProgVar(
+              VarNameSingle(
+               y
+              ) [VarNameSingle]
+            ) [ProgVar]
+            BaseProgVarDeclaration(
+              ProgVar(
+                VarNameArray(
+                 z
+                ) [VarNameArray]
+              ) [ProgVar]
+            ) [BaseProgVarDeclaration]
+          ) [ProgVarListRec]
+        ) [ProgVarDeclarationStart]
+      ) [ProgListVar]
+      ClassDeclaration(
+        ClassName(
+         B
+        ) [ClassName]
+        NoClassExtends(
+        ) [NoClassExtends]
+        VarDeclarations(
+          NoVarDecl(
+          ) [NoVarDecl]
+          VarDeclarationStart(
+            Type(
+             int
+            ) [Type]
+            BaseVarDeclarationList(
+              VarNameSingle(
+               num
+              ) [VarNameSingle]
+            ) [BaseVarDeclarationList]
+          ) [VarDeclarationStart]
+        ) [VarDeclarations]
+        ClassMethodDecl(
+          ConstructorDeclarationEmpty(
+          ) [ConstructorDeclarationEmpty]
+          MethodDeclListExists(
+            MethodDeclSingle(
+              MethodDecl(
+                MethodTypeName(
+                  Type(
+                   int
+                  ) [Type]
+                 m
+                ) [MethodTypeName]
+                OptFormalParams(
+                  SingleFormalParamDecl(
+                    FormalParamDeclSingle(
+                      Type(
+                       int
+                      ) [Type]
+                     par
+                    ) [FormalParamDeclSingle]
+                  ) [SingleFormalParamDecl]
+                ) [OptFormalParams]
+                NoVarDecl(
+                ) [NoVarDecl]
+                OptStatementList(
+                  StatementSingle(
+                    ReturnExprStatement(
+                      TermExpr(
+                        FactorTerm(
+                          DesignatorFactor(
+                            DesignatorSingle(
+                             par
+                            ) [DesignatorSingle]
+                          ) [DesignatorFactor]
+                        ) [FactorTerm]
+                      ) [TermExpr]
+                    ) [ReturnExprStatement]
+                  ) [StatementSingle]
+                ) [OptStatementList]
+              ) [MethodDecl]
+            ) [MethodDeclSingle]
+          ) [MethodDeclListExists]
+        ) [ClassMethodDecl]
+      ) [ClassDeclaration]
+    ) [ProgListClass]
+    ClassDeclaration(
+      ClassName(
+       C
+      ) [ClassName]
+      ClassExtends(
+        SuperClassIdent(
+         B
+        ) [SuperClassIdent]
+      ) [ClassExtends]
+      NoVarDecl(
+      ) [NoVarDecl]
+      ClassMethodDecl(
+        ConstructorDeclarationList(
+          ConstructorDeclarationEmpty(
+          ) [ConstructorDeclarationEmpty]
+          ConstructorDeclarationInst(
+            ConstructorDeclarationStart(
+             C
+            ) [ConstructorDeclarationStart]
+            OptFormalParams(
+              SingleFormalParamDecl(
+                FormalParamDeclSingle(
+                  Type(
+                   int
+                  ) [Type]
+                 number
+                ) [FormalParamDeclSingle]
+              ) [SingleFormalParamDecl]
+            ) [OptFormalParams]
+            NoVarDecl(
+            ) [NoVarDecl]
+            OptStatementList(
+              StatementSingle(
+                DesignatorStatementStmt(
+                  AssignmentStatement(
+                    AssignmentExpr(
+                      DesignatorField(
+                        DesignatorSingle(
+                         this
+                        ) [DesignatorSingle]
+                       num
+                      ) [DesignatorField]
+                      TermExpr(
+                        FactorTerm(
+                          DesignatorFactor(
+                            DesignatorSingle(
+                             number
+                            ) [DesignatorSingle]
+                          ) [DesignatorFactor]
+                        ) [FactorTerm]
+                      ) [TermExpr]
+                    ) [AssignmentExpr]
+                  ) [AssignmentStatement]
+                ) [DesignatorStatementStmt]
+              ) [StatementSingle]
+            ) [OptStatementList]
+          ) [ConstructorDeclarationInst]
+        ) [ConstructorDeclarationList]
+        MethodDeclListExists(
+          MethodDeclSingle(
+            MethodDecl(
+              MethodTypeName(
+                Type(
+                 int
+                ) [Type]
+               m
+              ) [MethodTypeName]
+              OptFormalParams(
+                SingleFormalParamDecl(
+                  FormalParamDeclSingle(
+                    Type(
+                     int
+                    ) [Type]
+                   par
+                  ) [FormalParamDeclSingle]
+                ) [SingleFormalParamDecl]
+              ) [OptFormalParams]
+              NoVarDecl(
+              ) [NoVarDecl]
+              OptStatementList(
+                StatementSingle(
+                  ReturnExprStatement(
+                    TermExpr(
+                      MulTerm(
+                        FactorTerm(
+                          DesignatorFactor(
+                            DesignatorSingle(
+                             num
+                            ) [DesignatorSingle]
+                          ) [DesignatorFactor]
+                        ) [FactorTerm]
+                        MultiplyOp(
+                        ) [MultiplyOp]
+                        DesignatorFactor(
+                          DesignatorSingle(
+                           par
+                          ) [DesignatorSingle]
+                        ) [DesignatorFactor]
+                      ) [MulTerm]
+                    ) [TermExpr]
+                  ) [ReturnExprStatement]
+                ) [StatementSingle]
+              ) [OptStatementList]
+            ) [MethodDecl]
+          ) [MethodDeclSingle]
+        ) [MethodDeclListExists]
+      ) [ClassMethodDecl]
+    ) [ClassDeclaration]
+  ) [ProgListClass]
+  MethodDeclListExists(
+    MethodDeclarations(
+      MethodDeclarations(
+        MethodDeclSingle(
+          MethodDecl(
+            MethodTypeName(
+              Type(
+               int
+              ) [Type]
+             k
+            ) [MethodTypeName]
+            NoFormalParam(
+            ) [NoFormalParam]
+            VarDeclarations(
+              NoVarDecl(
+              ) [NoVarDecl]
+              VarDeclarationStart(
+                Type(
+                 int
+                ) [Type]
+                BaseVarDeclarationList(
+                  VarNameSingle(
+                   c
+                  ) [VarNameSingle]
+                ) [BaseVarDeclarationList]
+              ) [VarDeclarationStart]
+            ) [VarDeclarations]
+            OptStatementList(
+              Statements(
+                StatementSingle(
+                  DesignatorStatementStmt(
+                    AssignmentStatement(
+                      AssignmentExpr(
+                        DesignatorSingle(
+                         c
+                        ) [DesignatorSingle]
+                        TermExpr(
+                          FactorTerm(
+                            ConstFactor(
+                              ConstIntType(
+                               1
+                              ) [ConstIntType]
+                            ) [ConstFactor]
+                          ) [FactorTerm]
+                        ) [TermExpr]
+                      ) [AssignmentExpr]
+                    ) [AssignmentStatement]
+                  ) [DesignatorStatementStmt]
+                ) [StatementSingle]
+                ReturnExprStatement(
+                  AddExpr(
+                    TermExpr(
+                      FactorTerm(
+                        DesignatorFactor(
+                          DesignatorSingle(
+                           c
+                          ) [DesignatorSingle]
+                        ) [DesignatorFactor]
+                      ) [FactorTerm]
+                    ) [TermExpr]
+                    PlusOp(
+                    ) [PlusOp]
+                    FactorTerm(
+                      ConstFactor(
+                        ConstIntType(
+                         2
+                        ) [ConstIntType]
+                      ) [ConstFactor]
+                    ) [FactorTerm]
+                  ) [AddExpr]
+                ) [ReturnExprStatement]
+              ) [Statements]
+            ) [OptStatementList]
+          ) [MethodDecl]
+        ) [MethodDeclSingle]
+        MethodDecl(
+          MethodTypeName(
+            Type(
+             int
+            ) [Type]
+           g
+          ) [MethodTypeName]
+          OptFormalParams(
+            FormalParamDecls(
+              FormalParamDeclSingle(
+                Type(
+                 int
+                ) [Type]
+               op
+              ) [FormalParamDeclSingle]
+              SingleFormalParamDecl(
+                FormalParamDeclSingle(
+                  Type(
+                   int
+                  ) [Type]
+                 mul
+                ) [FormalParamDeclSingle]
+              ) [SingleFormalParamDecl]
+            ) [FormalParamDecls]
+          ) [OptFormalParams]
+          NoVarDecl(
+          ) [NoVarDecl]
+          OptStatementList(
+            StatementSingle(
+              ReturnExprStatement(
+                TermExpr(
+                  MulTerm(
+                    FactorTerm(
+                      DesignatorFactor(
+                        DesignatorSingle(
+                         op
+                        ) [DesignatorSingle]
+                      ) [DesignatorFactor]
+                    ) [FactorTerm]
+                    MultiplyOp(
+                    ) [MultiplyOp]
+                    DesignatorFactor(
+                      DesignatorSingle(
+                       mul
+                      ) [DesignatorSingle]
+                    ) [DesignatorFactor]
+                  ) [MulTerm]
+                ) [TermExpr]
+              ) [ReturnExprStatement]
+            ) [StatementSingle]
+          ) [OptStatementList]
+        ) [MethodDecl]
+      ) [MethodDeclarations]
+      MethodDecl(
+        MethodTypeName(
+          Type(
+           int
+          ) [Type]
+         main
+        ) [MethodTypeName]
+        NoFormalParam(
+        ) [NoFormalParam]
+        VarDeclarations(
+          VarDeclarations(
+            NoVarDecl(
+            ) [NoVarDecl]
+            VarDeclarationStart(
+              Type(
+               B
+              ) [Type]
+              BaseVarDeclarationList(
+                VarNameSingle(
+                 obj_c
+                ) [VarNameSingle]
+              ) [BaseVarDeclarationList]
+            ) [VarDeclarationStart]
+          ) [VarDeclarations]
+          VarDeclarationStart(
+            Type(
+             bool
+            ) [Type]
+            BaseVarDeclarationList(
+              VarNameSingle(
+               b
+              ) [VarNameSingle]
+            ) [BaseVarDeclarationList]
+          ) [VarDeclarationStart]
+        ) [VarDeclarations]
+        OptStatementList(
+          Statements(
+            Statements(
+              Statements(
+                Statements(
+                  Statements(
+                    Statements(
+                      Statements(
+                        Statements(
+                          Statements(
+                            StatementSingle(
+                              DesignatorStatementStmt(
+                                AssignmentStatement(
+                                  AssignmentExpr(
+                                    DesignatorSingle(
+                                     x
+                                    ) [DesignatorSingle]
+                                    TermExpr(
+                                      FactorTerm(
+                                        ConstFactor(
+                                          ConstIntType(
+                                           0
+                                          ) [ConstIntType]
+                                        ) [ConstFactor]
+                                      ) [FactorTerm]
+                                    ) [TermExpr]
+                                  ) [AssignmentExpr]
+                                ) [AssignmentStatement]
+                              ) [DesignatorStatementStmt]
+                            ) [StatementSingle]
+                            DesignatorStatementStmt(
+                              AssignmentStatement(
+                                AssignmentExpr(
+                                  DesignatorSingle(
+                                   y
+                                  ) [DesignatorSingle]
+                                  TermExpr(
+                                    FactorTerm(
+                                      ConstFactor(
+                                        ConstIntType(
+                                         0
+                                        ) [ConstIntType]
+                                      ) [ConstFactor]
+                                    ) [FactorTerm]
+                                  ) [TermExpr]
+                                ) [AssignmentExpr]
+                              ) [AssignmentStatement]
+                            ) [DesignatorStatementStmt]
+                          ) [Statements]
+                          DesignatorStatementStmt(
+                            AssignmentStatement(
+                              AssignmentExpr(
+                                DesignatorSingle(
+                                 obj_c
+                                ) [DesignatorSingle]
+                                TermExpr(
+                                  FactorTerm(
+                                    OperatorNewClass(
+                                      ClassNewType(
+                                        Type(
+                                         C
+                                        ) [Type]
+                                      ) [ClassNewType]
+                                      OptMethodActualParams(
+                                        ActualParamSingle(
+                                          ActualParameter(
+                                            TermExpr(
+                                              FactorTerm(
+                                                ConstFactor(
+                                                  ConstIntType(
+                                                   4
+                                                  ) [ConstIntType]
+                                                ) [ConstFactor]
+                                              ) [FactorTerm]
+                                            ) [TermExpr]
+                                          ) [ActualParameter]
+                                        ) [ActualParamSingle]
+                                      ) [OptMethodActualParams]
+                                    ) [OperatorNewClass]
+                                  ) [FactorTerm]
+                                ) [TermExpr]
+                              ) [AssignmentExpr]
+                            ) [AssignmentStatement]
+                          ) [DesignatorStatementStmt]
+                        ) [Statements]
+                        PrintStatement(
+                          TermExpr(
+                            FactorTerm(
+                              DesignatorFactor(
+                                DesignatorField(
+                                  DesignatorSingle(
+                                   obj_c
+                                  ) [DesignatorSingle]
+                                 num
+                                ) [DesignatorField]
+                              ) [DesignatorFactor]
+                            ) [FactorTerm]
+                          ) [TermExpr]
+                        ) [PrintStatement]
+                      ) [Statements]
+                      DesignatorStatementStmt(
+                        AssignmentStatement(
+                          AssignmentExpr(
+                            DesignatorSingle(
+                             x
+                            ) [DesignatorSingle]
+                            TermExpr(
+                              FactorTerm(
+                                FactorFuncCall(
+                                  FunctionCall(
+                                    FunctionName(
+                                      DesignatorField(
+                                        DesignatorSingle(
+                                         obj_c
+                                        ) [DesignatorSingle]
+                                       m
+                                      ) [DesignatorField]
+                                    ) [FunctionName]
+                                    OptMethodActualParams(
+                                      ActualParamSingle(
+                                        ActualParameter(
+                                          TermExpr(
+                                            FactorTerm(
+                                              ConstFactor(
+                                                ConstIntType(
+                                                 4
+                                                ) [ConstIntType]
+                                              ) [ConstFactor]
+                                            ) [FactorTerm]
+                                          ) [TermExpr]
+                                        ) [ActualParameter]
+                                      ) [ActualParamSingle]
+                                    ) [OptMethodActualParams]
+                                  ) [FunctionCall]
+                                ) [FactorFuncCall]
+                              ) [FactorTerm]
+                            ) [TermExpr]
+                          ) [AssignmentExpr]
+                        ) [AssignmentStatement]
+                      ) [DesignatorStatementStmt]
+                    ) [Statements]
+                    PrintStatement(
+                      TermExpr(
+                        FactorTerm(
+                          DesignatorFactor(
+                            DesignatorSingle(
+                             x
+                            ) [DesignatorSingle]
+                          ) [DesignatorFactor]
+                        ) [FactorTerm]
+                      ) [TermExpr]
+                    ) [PrintStatement]
+                  ) [Statements]
+                  IfStatement(
+                    IfConstruct(
+                      IfKeyWord(
+                      ) [IfKeyWord]
+                      ControlConditionValid(
+                        ConditionSingle(
+                          ConditionTermSingle(
+                            ConditionFactorRel(
+                              TermExpr(
+                                FactorTerm(
+                                  DesignatorFactor(
+                                    DesignatorSingle(
+                                     obj_c
+                                    ) [DesignatorSingle]
+                                  ) [DesignatorFactor]
+                                ) [FactorTerm]
+                              ) [TermExpr]
+                              EqualsOp(
+                              ) [EqualsOp]
+                              TermExpr(
+                                FactorTerm(
+                                  DesignatorFactor(
+                                    DesignatorSingle(
+                                     obj_c
+                                    ) [DesignatorSingle]
+                                  ) [DesignatorFactor]
+                                ) [FactorTerm]
+                              ) [TermExpr]
+                            ) [ConditionFactorRel]
+                          ) [ConditionTermSingle]
+                        ) [ConditionSingle]
+                      ) [ControlConditionValid]
+                      BlockStatement(
+                        OptStatementList(
+                          StatementSingle(
+                            PrintStatement(
+                              TermExpr(
+                                FactorTerm(
+                                  ConstFactor(
+                                    ConstCharType(
+                                     y
+                                    ) [ConstCharType]
+                                  ) [ConstFactor]
+                                ) [FactorTerm]
+                              ) [TermExpr]
+                            ) [PrintStatement]
+                          ) [StatementSingle]
+                        ) [OptStatementList]
+                      ) [BlockStatement]
+                    ) [IfConstruct]
+                  ) [IfStatement]
+                ) [Statements]
+                DesignatorStatementStmt(
+                  AssignmentStatement(
+                    AssignmentExpr(
+                      DesignatorSingle(
+                       b
+                      ) [DesignatorSingle]
+                      TermExpr(
+                        FactorTerm(
+                          ConstFactor(
+                            ConstBoolType(
+                             false
+                            ) [ConstBoolType]
+                          ) [ConstFactor]
+                        ) [FactorTerm]
+                      ) [TermExpr]
+                    ) [AssignmentExpr]
+                  ) [AssignmentStatement]
+                ) [DesignatorStatementStmt]
+              ) [Statements]
+              PrintStatement(
+                TermExpr(
+                  FactorTerm(
+                    DesignatorFactor(
+                      DesignatorSingle(
+                       b
+                      ) [DesignatorSingle]
+                    ) [DesignatorFactor]
+                  ) [FactorTerm]
+                ) [TermExpr]
+              ) [PrintStatement]
+            ) [Statements]
+            ReturnExprStatement(
+              TermExpr(
+                FactorTerm(
+                  ConstFactor(
+                    ConstIntType(
+                     0
+                    ) [ConstIntType]
+                  ) [ConstFactor]
+                ) [FactorTerm]
+              ) [TermExpr]
+            ) [ReturnExprStatement]
+          ) [Statements]
+        ) [OptStatementList]
+      ) [MethodDecl]
+    ) [MethodDeclarations]
+  ) [MethodDeclListExists]
+) [Program]
+INFO  14:29:59,862 - ===============================
+INFO  14:29:59,862 - Parsiranje uspesno zavrseno!
+INFO  14:29:59,862 - Generating bytecode file: C:\Users\stefc\Fakultet_lokal\PP1\pp1lab.templateAST\workspace\MJCompiler\test\program.obj
+INFO  14:29:59,868 - Parsiranje uspesno zavrseno!
+INFO  14:29:59,868 - Izvrsvanje programa...

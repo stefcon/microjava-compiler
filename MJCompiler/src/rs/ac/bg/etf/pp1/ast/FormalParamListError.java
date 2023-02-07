@@ -1,13 +1,25 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/1/2023 22:13:11
+// 7/1/2023 14:26:37
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public class FormalParamListError extends FormalParamList {
 
-    public FormalParamListError () {
+    private FormalParamList FormalParamList;
+
+    public FormalParamListError (FormalParamList FormalParamList) {
+        this.FormalParamList=FormalParamList;
+        if(FormalParamList!=null) FormalParamList.setParent(this);
+    }
+
+    public FormalParamList getFormalParamList() {
+        return FormalParamList;
+    }
+
+    public void setFormalParamList(FormalParamList FormalParamList) {
+        this.FormalParamList=FormalParamList;
     }
 
     public void accept(Visitor visitor) {
@@ -15,13 +27,16 @@ public class FormalParamListError extends FormalParamList {
     }
 
     public void childrenAccept(Visitor visitor) {
+        if(FormalParamList!=null) FormalParamList.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
+        if(FormalParamList!=null) FormalParamList.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
+        if(FormalParamList!=null) FormalParamList.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -29,6 +44,12 @@ public class FormalParamListError extends FormalParamList {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
         buffer.append("FormalParamListError(\n");
+
+        if(FormalParamList!=null)
+            buffer.append(FormalParamList.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
 
         buffer.append(tab);
         buffer.append(") [FormalParamListError]");

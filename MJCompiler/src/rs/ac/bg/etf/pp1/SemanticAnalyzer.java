@@ -102,7 +102,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	/* Program grammar, global declarations (const, variable, class) */
 	public void visit(Program program) {
 		Code.dataSize = Tab.currentScope.getnVars();
-		if (!isMainDefined) { // TODO: (pot) proveriti da li main ima parametre! (ako se ima vremena)
+		if (!isMainDefined) { // TODO: proveriti da li main ima parametre! (ako se ima vremena)
 			report_error("Semanticka greska: Program mora imati definisanu main() metodu", program);
 		}
 		nVars = Tab.currentScope.getnVars();
@@ -477,7 +477,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		if (currentMethod == null) {
 			report_error("Semanticka greska: return pronadjen van funkcije", ret);
 		}
-		if (currentMethod == null && !ret.getExpr().struct.compatibleWith(currentMethod.getType())) {
+		
+		// !ret.getExpr().struct.compatibleWith(currentMethod.getType())
+		if (currentMethod == null && !checkIfSubclass(currentMethod.getType(), ret.getExpr().struct)) {
 			report_error("Semanticka greska: return vraca nekompatibilan tip", ret);
 		}
 		if (insideConstructor) {
@@ -847,9 +849,18 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	public void visit(ConditionFactorRel conditionFactor) {
 		Struct type_first = conditionFactor.getExpr().struct;
 		Struct type_second = conditionFactor.getExpr1().struct;
-		if (type_first == boolType || !type_first.compatibleWith(type_second)) {
+		if (!type_first.compatibleWith(type_second) 
+			&& !checkIfSubclass(type_first, type_second)
+			&& !checkIfSubclass(type_second, type_first)) {
 			report_error("Semanticka greska: Nekompatibilni tipovi u relaciji", conditionFactor);
 		}
+		else if (type_first.getKind() == Struct.Array || type_first.getKind() == Struct.Class) {
+			Relop relop = conditionFactor.getRelop();
+			if (!(relop instanceof EqualsOp) && !(relop instanceof NotEqualsOp)) {
+				report_error("Semanticka greska: objekti klasa i nizovi mogu da se porede samo sa operatorima '==' ili '!='", conditionFactor);
+			}
+		}
+		
 		conditionFactor.struct = boolType;
 	}
 

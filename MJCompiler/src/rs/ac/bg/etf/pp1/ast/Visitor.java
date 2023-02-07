@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/1/2023 22:13:12
+// 7/1/2023 14:26:37
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -15,6 +15,7 @@ public interface Visitor {
     public void visit(OptionalStatementList OptionalStatementList);
     public void visit(ProgVarDeclaration ProgVarDeclaration);
     public void visit(ConditionFactor ConditionFactor);
+    public void visit(MethodDeclaration MethodDeclaration);
     public void visit(Relop Relop);
     public void visit(OptionalMethodDeclList OptionalMethodDeclList);
     public void visit(FormalParamList FormalParamList);
@@ -115,7 +116,7 @@ public interface Visitor {
     public void visit(ElseKeyWord ElseKeyWord);
     public void visit(IfKeyWord IfKeyWord);
     public void visit(IfConstruct IfConstruct);
-    public void visit(DesignatorAssignmentError DesignatorAssignmentError);
+    public void visit(StatementError StatementError);
     public void visit(BlockStatement BlockStatement);
     public void visit(IfElseStatement IfElseStatement);
     public void visit(IfStatement IfStatement);
@@ -142,6 +143,7 @@ public interface Visitor {
     public void visit(OptFormalParams OptFormalParams);
     public void visit(MethodVoidName MethodVoidName);
     public void visit(MethodTypeName MethodTypeName);
+    public void visit(MethodDeclError MethodDeclError);
     public void visit(MethodDecl MethodDecl);
     public void visit(MethodDeclSingle MethodDeclSingle);
     public void visit(MethodDeclarations MethodDeclarations);
@@ -154,11 +156,10 @@ public interface Visitor {
     public void visit(NoClassMethodDecl NoClassMethodDecl);
     public void visit(ClassMethodDecl ClassMethodDecl);
     public void visit(SuperClassIdent SuperClassIdent);
-    public void visit(ClassExtendsError ClassExtendsError);
+    public void visit(ExtendsError ExtendsError);
     public void visit(NoClassExtends NoClassExtends);
     public void visit(ClassExtends ClassExtends);
     public void visit(ClassName ClassName);
-    public void visit(ClassDeclarationError ClassDeclarationError);
     public void visit(ClassDeclaration ClassDeclaration);
     public void visit(ProgVar ProgVar);
     public void visit(ProgVarDeclarationCommaError ProgVarDeclarationCommaError);
@@ -174,7 +175,6 @@ public interface Visitor {
     public void visit(VarDeclarationCommaError VarDeclarationCommaError);
     public void visit(BaseVarDeclarationList BaseVarDeclarationList);
     public void visit(VarDeclarationList VarDeclarationList);
-    public void visit(VarDeclarationBracketError VarDeclarationBracketError);
     public void visit(VarDeclarationSemiError VarDeclarationSemiError);
     public void visit(VarDeclarationStart VarDeclarationStart);
     public void visit(ConstBoolType ConstBoolType);

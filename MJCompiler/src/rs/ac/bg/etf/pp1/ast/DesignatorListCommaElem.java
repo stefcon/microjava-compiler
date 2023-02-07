@@ -1,28 +1,20 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/1/2023 22:13:11
+// 7/1/2023 14:26:37
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public class DesignatorListCommaElem extends DesignatorListContent {
 
-    private DesignatorListContent DesignatorListContent;
     private DesignatorDummy DesignatorDummy;
+    private DesignatorListContent DesignatorListContent;
 
-    public DesignatorListCommaElem (DesignatorListContent DesignatorListContent, DesignatorDummy DesignatorDummy) {
-        this.DesignatorListContent=DesignatorListContent;
-        if(DesignatorListContent!=null) DesignatorListContent.setParent(this);
+    public DesignatorListCommaElem (DesignatorDummy DesignatorDummy, DesignatorListContent DesignatorListContent) {
         this.DesignatorDummy=DesignatorDummy;
         if(DesignatorDummy!=null) DesignatorDummy.setParent(this);
-    }
-
-    public DesignatorListContent getDesignatorListContent() {
-        return DesignatorListContent;
-    }
-
-    public void setDesignatorListContent(DesignatorListContent DesignatorListContent) {
         this.DesignatorListContent=DesignatorListContent;
+        if(DesignatorListContent!=null) DesignatorListContent.setParent(this);
     }
 
     public DesignatorDummy getDesignatorDummy() {
@@ -33,24 +25,32 @@ public class DesignatorListCommaElem extends DesignatorListContent {
         this.DesignatorDummy=DesignatorDummy;
     }
 
+    public DesignatorListContent getDesignatorListContent() {
+        return DesignatorListContent;
+    }
+
+    public void setDesignatorListContent(DesignatorListContent DesignatorListContent) {
+        this.DesignatorListContent=DesignatorListContent;
+    }
+
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(DesignatorListContent!=null) DesignatorListContent.accept(visitor);
         if(DesignatorDummy!=null) DesignatorDummy.accept(visitor);
+        if(DesignatorListContent!=null) DesignatorListContent.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(DesignatorListContent!=null) DesignatorListContent.traverseTopDown(visitor);
         if(DesignatorDummy!=null) DesignatorDummy.traverseTopDown(visitor);
+        if(DesignatorListContent!=null) DesignatorListContent.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(DesignatorListContent!=null) DesignatorListContent.traverseBottomUp(visitor);
         if(DesignatorDummy!=null) DesignatorDummy.traverseBottomUp(visitor);
+        if(DesignatorListContent!=null) DesignatorListContent.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -59,14 +59,14 @@ public class DesignatorListCommaElem extends DesignatorListContent {
         buffer.append(tab);
         buffer.append("DesignatorListCommaElem(\n");
 
-        if(DesignatorListContent!=null)
-            buffer.append(DesignatorListContent.toString("  "+tab));
+        if(DesignatorDummy!=null)
+            buffer.append(DesignatorDummy.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(DesignatorDummy!=null)
-            buffer.append(DesignatorDummy.toString("  "+tab));
+        if(DesignatorListContent!=null)
+            buffer.append(DesignatorListContent.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

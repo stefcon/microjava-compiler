@@ -34,7 +34,7 @@ program MJProgram
 		return op * mul;
 	}
 	
-	int main() B obj_c; {
+	int main() B obj_c; bool b; {
 		x = 0;
 		y = 0;
 		
@@ -45,7 +45,13 @@ program MJProgram
 		x = obj_c.m(4);
 		print(x);
 		
-
+		if (obj_c > obj_c) {
+			print('y');
+		}
+		
+		b = false;
+		print(b);
+		
 		return 0;
 	}
 }

@@ -96,7 +96,7 @@ nonterminal FunctionName, OptionalMethodActualParams, ActualParameter, ActualPar
 nonterminal Relop, Addop, Mulop; 	
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Program, ProgName, Designator, ForIdent, ConstType;
-nonterminal rs.etf.pp1.symboltable.concepts.Obj ClassName, ConstructorDeclStart, MethodDecl, MethodTypeAndName; 
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ClassName, ConstructorDeclStart, MethodDeclaration, MethodTypeAndName; 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Term, Expr, AssignmentStatementExpr, Factor, VarName;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct FunctionCall, Condition, ConditionTerm, ConditionFactor; 
 
@@ -114,7 +114,7 @@ ProgName ::= (ProgName) IDENT:pName
 
 ProgDeclList ::= (ProgListConst) ProgDeclList ConstDeclStart 
 				 |
-				 (ProgListVar) ProgDeclList ProgVarDeclStart /* bilo je list */
+				 (ProgListVar) ProgDeclList ProgVarDeclStart
 				 |
 				 (ProgListClass) ProgDeclList ProgClassDecl
 				 |
@@ -145,17 +145,18 @@ ConstType ::= (ConstIntType) NUMBER
 			   
 VarDeclStart ::= (VarDeclarationStart) Type VarList SEMI
 				 |
-				 (VarDeclarationSemiError) error SEMI
- 				 |
- 				 (VarDeclarationBracketError) error LBRACE
+				 (VarDeclarationSemiError) error SEMI:l
+				 {: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :}
 				 ;
 
 
-VarList ::= (VarDeclarationList) VarList COMMA VarName
+VarList ::= (VarDeclarationList) VarName COMMA VarList
 		    |
 		    (BaseVarDeclarationList) VarName
 		    |
-			(VarDeclarationCommaError) error COMMA
+			(VarDeclarationCommaError) error COMMA:l
+			{: parser.report_error("Oporavak od greske do , na liniji " + lleft, null); :}
+			VarList
 		    ;
 		    
 VarName ::= (VarNameSingle) IDENT:varName
@@ -166,14 +167,15 @@ VarName ::= (VarNameSingle) IDENT:varName
 		     
 VarDeclList ::= (VarDeclarations) VarDeclList VarDeclStart
 				|
-				(NoVarDecl)/* epsilon */ 
+				(NoVarDecl)/* epsilon */
 				;		
 
 			   
 			   
 ProgVarDeclStart ::= (ProgVarDeclarationStart) ProgVarType ProgVarList SEMI 
 					 |
-					 (ProgVarDeclarationSemiError) error:l SEMI
+					 (ProgVarDeclarationSemiError) error SEMI:l
+					 {: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :}
 					 ;
 
 
@@ -182,31 +184,31 @@ ProgVarType ::= (ProgVarType) Type
 ;
 
 
-ProgVarList ::= (ProgVarListRec) ProgVarList COMMA ProgVarDeclaration
+ProgVarList ::= (ProgVarListRec) ProgVarDeclaration COMMA ProgVarList
 				|
 				(BaseProgVarDeclaration) ProgVarDeclaration
 				|
-				(ProgVarDeclarationCommaError) error:l COMMA
+				(ProgVarDeclarationCommaError) error COMMA:l
+				{: parser.report_error("Oporavak od greske do , na liniji " + lleft, null); :}
+				ProgVarList
 				;
 				
 ProgVarDeclaration ::= (ProgVar) VarName
 ;
 
 
-ProgClassDecl ::= (ClassDeclaration) ClassName OptionalClassExtends LBRACE VarDeclList OptionalClassMethodDecl RBRACE
-				  |
-				  (ClassDeclarationError) ClassName error VarDeclList OptionalClassMethodDecl RBRACE
-				  ;
+ProgClassDecl ::= (ClassDeclaration) ClassName OptionalClassExtends VarDeclList OptionalClassMethodDecl RBRACE
+;
 
 ClassName ::= (ClassName) CLASS IDENT:name
 ;
 
-OptionalClassExtends ::= (ClassExtends) EXT SuperClass
+OptionalClassExtends ::= (ClassExtends) EXT SuperClass LBRACE
 						 |
-						 (NoClassExtends) /* epsilon */
+						 (NoClassExtends) /* epsilon */ LBRACE
 						 |
-						 (ClassExtendsError) EXT error:l 
-						 {: parser.report_error("Sintaksna greska: greska prilikom definisanja natklase na liniji: " + lleft, null); :} LBRACE
+						 (ExtendsError) error LBRACE:l
+						 {: parser.report_error("Oporavak od greske do LBRACE u liniji " + lleft, null); :}
 						 ;
 
 SuperClass ::= (SuperClassIdent) IDENT:name
@@ -238,13 +240,16 @@ OptionalMethodDeclList ::= (MethodDeclListExists) MethodDeclList
 							;
 
 
-MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDecl
+MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDeclaration
 				   |
-				   (MethodDeclSingle) MethodDecl
+				   (MethodDeclSingle) MethodDeclaration
 				   ;
 
-MethodDecl ::= (MethodDecl) MethodTypeAndName LPAREN FormalParams RPAREN VarDeclList LBRACE OptionalStatementList RBRACE 
-;
+MethodDeclaration ::= (MethodDecl) MethodTypeAndName LPAREN FormalParams RPAREN VarDeclList LBRACE OptionalStatementList RBRACE 
+					  |
+					  (MethodDeclError) MethodTypeAndName LPAREN error RPAREN:l VarDeclList LBRACE OptionalStatementList RBRACE
+					  {: parser.report_error("Oporavak od greske do RPAREN na liniji " + lleft, null); :}
+					  ;
 
 MethodTypeAndName ::= (MethodTypeName) Type:retType IDENT:methName
 					  |
@@ -257,11 +262,13 @@ FormalParams ::= (OptFormalParams) FormalParamList
 			     (NoFormalParam) /* epsilon */
 			     ;
 
-FormalParamList ::= (FormalParamDecls) FormalParamList COMMA FormalParamDecl
+FormalParamList ::= (FormalParamDecls) FormalParamDecl COMMA FormalParamList
 					|
 					(SingleFormalParamDecl) FormalParamDecl
 					|
-					(FormalParamListError) error:l {: parser.report_error("Sintaksna greska: greska prilikom pisanja formalnih parametara na liniji " + lleft, null); :} COMMA
+					(FormalParamListError) error COMMA:l
+					{: parser.report_error("Oporavak od greske do , na liniji " + lleft, null); :}
+				    FormalParamList
 					;
 					
 FormalParamDecl ::= (FormalParamDeclSingle) Type:paramType IDENT:name
@@ -308,7 +315,8 @@ Statement ::= (DesignatorStatementStmt) DesignatorStatement SEMI
 			  |
 			  (BlockStatement) LBRACE OptionalStatementList RBRACE
 			  |
-			  (DesignatorAssignmentError) Designator ASSIGN error:l {: parser.report_error("Sintaksna greska: greska pri dodeli na liniji: " + lleft, null); :} SEMI
+			  (StatementError) error SEMI:l
+			  {: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :} 
 			  ;
 
 			  
@@ -342,7 +350,8 @@ ForeachDesignator ::= (ForeachDesignator) Designator DOT
 
 ControlCondition ::= (ControlConditionValid) LPAREN Condition RPAREN
 					 |
-					 (ControlConditionError) LPAREN error:l {: parser.report_error("Sintaksna greska: greksa pri pisanju uslovnog izraza na liniji: " + lleft, null); :} RPAREN
+					 (ControlConditionError) LPAREN error:l RPAREN
+					 {: parser.report_error("Oporavak od greske do RPAREN na liniji " + lleft, null); :}
 					 ;
 
 
@@ -396,7 +405,7 @@ DesignatorListStart ::= (DesignatorListStart) DesignatorListStartDummy LBRACKET 
 DesignatorListStartDummy ::= (DesignatorListStartDummy) /* epsilon */
 ; 
 
-DesignatorListContent ::= (DesignatorListCommaElem) DesignatorListContent COMMA DesignatorDummy
+DesignatorListContent ::= (DesignatorListCommaElem) DesignatorDummy COMMA DesignatorListContent
 						  |
 						  (DesignatorListDummy) DesignatorDummy
 						  ;
