@@ -2,6 +2,8 @@
 **MicroJava** is a *high-level programming language*, *similar*, but *simpler* than **Java**.
 Similarly to Java, MicroJava source files are compiled to **bytecode**, which is then executed by a **virtual machine** (**MicroJava Virtual Machine**). MicroJava VM is a simple *interpretative emulator*.
 
+Full project specification can be found [here](https://github.com/stefcon/CompilerSpecification.pdf), while MicroJava language can be found [here](https://github.com/stefcon/MicroJavaSpecification.pdf)
+
 ## Commands for generating code
 Position inside src folder inside project
 - Generating lexer:
