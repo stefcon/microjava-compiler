@@ -3,7 +3,6 @@ package rs.ac.bg.etf.pp1;
 import java_cup.runtime.*;
 import org.apache.log4j.*;
 
-// import java.io.*;
 import rs.ac.bg.etf.pp1.ast.*;
 
 
@@ -98,6 +97,9 @@ nonterminal ClassNewType ClassNewType;
 nonterminal VarDeclStart VarDeclStart;
 nonterminal VarDeclList VarDeclList;
 nonterminal VarList VarList;
+nonterminal FieldDeclStart FieldDeclStart;
+nonterminal FieldDeclList FieldDeclList;
+nonterminal FieldList FieldList;
 nonterminal FormalParamList FormalParamList;
 nonterminal FormalParamDecl FormalParamDecl;
 nonterminal FormalParams FormalParams; 
@@ -178,10 +180,7 @@ ConstType ::= (ConstIntType) NUMBER:N1 {: RESULT=new ConstIntType(N1); RESULT.se
 			   
 			   
 VarDeclStart ::= (VarDeclarationStart) Type:T1 VarList:V2 SEMI {: RESULT=new VarDeclarationStart(T1, V2); RESULT.setLine(T1left); :}
-				 |
-				 (VarDeclarationSemiError) error SEMI:l
-				 {: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :} {: RESULT=new VarDeclarationSemiError(); :}
-				 ;
+;
 
 
 VarList ::= (VarDeclarationList) VarName:V1 COMMA VarList:V2 {: RESULT=new VarDeclarationList(V1, V2); RESULT.setLine(V1left); :}
@@ -191,6 +190,9 @@ VarList ::= (VarDeclarationList) VarName:V1 COMMA VarList:V2 {: RESULT=new VarDe
 			(VarDeclarationCommaError) error COMMA:l
 			{: parser.report_error("Oporavak od greske do , na liniji " + lleft, null); :}
 			VarList:V1 {: RESULT=new VarDeclarationCommaError(V1); RESULT.setLine(V1left); :}
+			|
+			(VarDeclarationSemiError) error:l
+			{: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :} {: RESULT=new VarDeclarationSemiError(); :}
 		    ;
 		    
 VarName ::= (VarNameSingle) IDENT:varName {: RESULT=new VarNameSingle(varName); RESULT.setLine(varNameleft); :}
@@ -199,7 +201,7 @@ VarName ::= (VarNameSingle) IDENT:varName {: RESULT=new VarNameSingle(varName); 
 			;
 
 		     
-VarDeclList ::= (VarDeclarations) VarDeclList:V1 VarDeclStart:V2 {: RESULT=new VarDeclarations(V1, V2); RESULT.setLine(V1left); :}
+VarDeclList ::= (VarDeclarations) VarDeclStart:V1 VarDeclList:V2 {: RESULT=new VarDeclarations(V1, V2); RESULT.setLine(V1left); :} 
 				|
 				(NoVarDecl) {: RESULT=new NoVarDecl(); :}/* epsilon */
 				;		
@@ -207,10 +209,7 @@ VarDeclList ::= (VarDeclarations) VarDeclList:V1 VarDeclStart:V2 {: RESULT=new V
 			   
 			   
 ProgVarDeclStart ::= (ProgVarDeclarationStart) ProgVarType:P1 ProgVarList:P2 SEMI {: RESULT=new ProgVarDeclarationStart(P1, P2); RESULT.setLine(P1left); :} 
-					 |
-					 (ProgVarDeclarationSemiError) error SEMI:l
-					 {: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :} {: RESULT=new ProgVarDeclarationSemiError(); :}
-					 ;
+;
 
 
 
@@ -225,14 +224,18 @@ ProgVarList ::= (ProgVarListRec) ProgVarDeclaration:P1 COMMA ProgVarList:P2 {: R
 				(ProgVarDeclarationCommaError) error COMMA:l
 				{: parser.report_error("Oporavak od greske do , na liniji " + lleft, null); :}
 				ProgVarList:P1 {: RESULT=new ProgVarDeclarationCommaError(P1); RESULT.setLine(P1left); :}
+				|
+				(ProgVarListSemiError) error:l
+				{: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :} {: RESULT=new ProgVarListSemiError(); :}
 				;
 				
 ProgVarDeclaration ::= (ProgVar) VarName:V1 {: RESULT=new ProgVar(V1); RESULT.setLine(V1left); :}
 ;
 
 
-ProgClassDecl ::= (ClassDeclaration) ClassName:C1 OptionalClassExtends:O2 VarDeclList:V3 OptionalClassMethodDecl:O4 RBRACE {: RESULT=new ClassDeclaration(C1, O2, V3, O4); RESULT.setLine(C1left); :}
+ProgClassDecl ::= (ClassDeclaration) ClassName:C1 OptionalClassExtends:O2 FieldDeclList:F3 OptionalClassMethodDecl:O4 RBRACE {: RESULT=new ClassDeclaration(C1, O2, F3, O4); RESULT.setLine(C1left); :}
 ;
+
 
 ClassName ::= (ClassName) CLASS IDENT:name {: RESULT=new ClassName(name); RESULT.setLine(nameleft); :}
 ;
@@ -242,11 +245,31 @@ OptionalClassExtends ::= (ClassExtends) EXT SuperClass:S1 LBRACE {: RESULT=new C
 						 (NoClassExtends) /* epsilon */ LBRACE {: RESULT=new NoClassExtends(); :}
 						 |
 						 (ExtendsError) error LBRACE:l
-						 {: parser.report_error("Oporavak od greske do LBRACE u liniji " + lleft, null); :} {: RESULT=new ExtendsError(); :}
+						 {: parser.report_error("Oporavak od greske do { u liniji " + lleft, null); :} {: RESULT=new ExtendsError(); :}
 						 ;
 
 SuperClass ::= (SuperClassIdent) IDENT:name {: RESULT=new SuperClassIdent(name); RESULT.setLine(nameleft); :}
 ;
+
+
+FieldDeclList ::= (FieldDeclListExists) FieldDeclStart:F1 FieldDeclList:F2 {: RESULT=new FieldDeclListExists(F1, F2); RESULT.setLine(F1left); :}
+				  |
+				  (NoFieldDecl) {: RESULT=new NoFieldDecl(); :} /* epsilon */
+				  ;
+				  
+FieldDeclStart ::= (FieldDeclarationStart) Type:T1 FieldList:F2 SEMI {: RESULT=new FieldDeclarationStart(T1, F2); RESULT.setLine(T1left); :}
+				   |
+				   (FieldDeclErrorSemi) error SEMI:l
+				   {: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :} {: RESULT=new FieldDeclErrorSemi(); :}
+				   |
+				   (FieldDeclErrorBrace) error:l
+				   {: parser.report_error("Oporavak od greske do { na liniji " + lleft, null); :} {: RESULT=new FieldDeclErrorBrace(); :}
+				   ;
+				   				  
+FieldList ::= (FieldDeclarationList) VarName:V1 COMMA FieldList:F2 {: RESULT=new FieldDeclarationList(V1, F2); RESULT.setLine(V1left); :}
+		      |
+		      (BaseFieldDeclarationList) VarName:V1 {: RESULT=new BaseFieldDeclarationList(V1); RESULT.setLine(V1left); :}
+		      ;
 						 
 OptionalClassMethodDecl ::= (ClassMethodDecl) LBRACE ConstructorDeclList:C1 OptionalMethodDeclList:O2 RBRACE {: RESULT=new ClassMethodDecl(C1, O2); RESULT.setLine(C1left); :}
 							|
@@ -282,7 +305,7 @@ MethodDeclList ::= (MethodDeclarations) MethodDeclList:M1 MethodDeclaration:M2 {
 MethodDeclaration ::= (MethodDecl) MethodTypeAndName:M1 LPAREN FormalParams:F2 RPAREN VarDeclList:V3 LBRACE OptionalStatementList:O4 RBRACE {: RESULT=new MethodDecl(M1, F2, V3, O4); RESULT.setLine(M1left); :} 
 					  |
 					  (MethodDeclError) MethodTypeAndName:M1 LPAREN error RPAREN:l VarDeclList:V2 LBRACE OptionalStatementList:O3 RBRACE
-					  {: parser.report_error("Oporavak od greske do RPAREN na liniji " + lleft, null); :} {: RESULT=new MethodDeclError(M1, V2, O3); RESULT.setLine(M1left); :}
+					  {: parser.report_error("Oporavak od greske do ) na liniji " + lleft, null); :} {: RESULT=new MethodDeclError(M1, V2, O3); RESULT.setLine(M1left); :}
 					  ;
 
 MethodTypeAndName ::= (MethodTypeName) Type:retType IDENT:methName {: RESULT=new MethodTypeName(retType, methName); RESULT.setLine(retTypeleft); :}
@@ -385,7 +408,7 @@ ForeachDesignator ::= (ForeachDesignator) Designator:D1 DOT {: RESULT=new Foreac
 ControlCondition ::= (ControlConditionValid) LPAREN Condition:C1 RPAREN {: RESULT=new ControlConditionValid(C1); RESULT.setLine(C1left); :}
 					 |
 					 (ControlConditionError) LPAREN error:l RPAREN
-					 {: parser.report_error("Oporavak od greske do RPAREN na liniji " + lleft, null); :} {: RESULT=new ControlConditionError(); :}
+					 {: parser.report_error("Oporavak od greske do ) na liniji " + lleft, null); :} {: RESULT=new ControlConditionError(); :}
 					 ;
 
 
@@ -429,7 +452,7 @@ DesignatorStatement ::= (AssignmentStatement) AssignmentStatementExpr:A1 {: RESU
 
 
 AssignmentStatementExpr ::= (AssignmentExpr) Designator:D1 ASSIGN Expr:E2 {: RESULT=new AssignmentExpr(D1, E2); RESULT.setLine(D1left); :}
-; /* TODO: error handling */
+;
 					   	
 
 					   	

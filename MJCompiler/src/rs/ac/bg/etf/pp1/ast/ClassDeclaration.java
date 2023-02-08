@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 7/1/2023 14:26:37
+// 8/1/2023 10:34:51
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -9,16 +9,16 @@ public class ClassDeclaration extends ProgClassDecl {
 
     private ClassName ClassName;
     private OptionalClassExtends OptionalClassExtends;
-    private VarDeclList VarDeclList;
+    private FieldDeclList FieldDeclList;
     private OptionalClassMethodDecl OptionalClassMethodDecl;
 
-    public ClassDeclaration (ClassName ClassName, OptionalClassExtends OptionalClassExtends, VarDeclList VarDeclList, OptionalClassMethodDecl OptionalClassMethodDecl) {
+    public ClassDeclaration (ClassName ClassName, OptionalClassExtends OptionalClassExtends, FieldDeclList FieldDeclList, OptionalClassMethodDecl OptionalClassMethodDecl) {
         this.ClassName=ClassName;
         if(ClassName!=null) ClassName.setParent(this);
         this.OptionalClassExtends=OptionalClassExtends;
         if(OptionalClassExtends!=null) OptionalClassExtends.setParent(this);
-        this.VarDeclList=VarDeclList;
-        if(VarDeclList!=null) VarDeclList.setParent(this);
+        this.FieldDeclList=FieldDeclList;
+        if(FieldDeclList!=null) FieldDeclList.setParent(this);
         this.OptionalClassMethodDecl=OptionalClassMethodDecl;
         if(OptionalClassMethodDecl!=null) OptionalClassMethodDecl.setParent(this);
     }
@@ -39,12 +39,12 @@ public class ClassDeclaration extends ProgClassDecl {
         this.OptionalClassExtends=OptionalClassExtends;
     }
 
-    public VarDeclList getVarDeclList() {
-        return VarDeclList;
+    public FieldDeclList getFieldDeclList() {
+        return FieldDeclList;
     }
 
-    public void setVarDeclList(VarDeclList VarDeclList) {
-        this.VarDeclList=VarDeclList;
+    public void setFieldDeclList(FieldDeclList FieldDeclList) {
+        this.FieldDeclList=FieldDeclList;
     }
 
     public OptionalClassMethodDecl getOptionalClassMethodDecl() {
@@ -62,7 +62,7 @@ public class ClassDeclaration extends ProgClassDecl {
     public void childrenAccept(Visitor visitor) {
         if(ClassName!=null) ClassName.accept(visitor);
         if(OptionalClassExtends!=null) OptionalClassExtends.accept(visitor);
-        if(VarDeclList!=null) VarDeclList.accept(visitor);
+        if(FieldDeclList!=null) FieldDeclList.accept(visitor);
         if(OptionalClassMethodDecl!=null) OptionalClassMethodDecl.accept(visitor);
     }
 
@@ -70,14 +70,14 @@ public class ClassDeclaration extends ProgClassDecl {
         accept(visitor);
         if(ClassName!=null) ClassName.traverseTopDown(visitor);
         if(OptionalClassExtends!=null) OptionalClassExtends.traverseTopDown(visitor);
-        if(VarDeclList!=null) VarDeclList.traverseTopDown(visitor);
+        if(FieldDeclList!=null) FieldDeclList.traverseTopDown(visitor);
         if(OptionalClassMethodDecl!=null) OptionalClassMethodDecl.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(ClassName!=null) ClassName.traverseBottomUp(visitor);
         if(OptionalClassExtends!=null) OptionalClassExtends.traverseBottomUp(visitor);
-        if(VarDeclList!=null) VarDeclList.traverseBottomUp(visitor);
+        if(FieldDeclList!=null) FieldDeclList.traverseBottomUp(visitor);
         if(OptionalClassMethodDecl!=null) OptionalClassMethodDecl.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -99,8 +99,8 @@ public class ClassDeclaration extends ProgClassDecl {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(VarDeclList!=null)
-            buffer.append(VarDeclList.toString("  "+tab));
+        if(FieldDeclList!=null)
+            buffer.append(FieldDeclList.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

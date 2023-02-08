@@ -27,7 +27,7 @@ public class Compiler {
 	public static void main(String[] args) throws Exception {
 		Logger log = Logger.getLogger(Compiler.class);
 		File sourceCode;
-		if (args.length == 2) {
+		if (args.length >= 2) {
 			sourceCode = new File(args[0]);
 		}
 		else if (args.length == 0) {

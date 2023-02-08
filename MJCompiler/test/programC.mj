@@ -45,7 +45,7 @@ program MJProgram
 		x = obj_c.m(4);
 		print(x);
 		
-		if (obj_c > obj_c) {
+		if (obj_c == obj_c) {
 			print('y');
 		}
 		

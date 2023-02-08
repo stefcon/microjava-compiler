@@ -156,6 +156,10 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	public void visit(VarDeclarationStart varStart) {
 		declarationType = null;
 	}
+	
+	public void visit(FieldDeclarationStart varStart) {
+		declarationType = null;
+	}
 
 	public void visit(VarNameSingle var) {
 		Obj obj = Tab.currentScope.findSymbol(var.getVarName());

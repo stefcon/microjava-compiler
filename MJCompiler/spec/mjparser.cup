@@ -3,7 +3,6 @@ package rs.ac.bg.etf.pp1;
 import java_cup.runtime.*;
 import org.apache.log4j.*;
 
-// import java.io.*;
 import rs.ac.bg.etf.pp1.ast.*;
 
 
@@ -84,6 +83,7 @@ nonterminal ProgClassDecl, OptionalClassExtends, OptionalClassMethodDecl, SuperC
 nonterminal ConstructorDeclList, ConstructorDecl, ClassNewType;
 
 nonterminal VarDeclStart, VarDeclList, VarList;
+nonterminal FieldDeclStart, FieldDeclList, FieldList;
 nonterminal FormalParamList, FormalParamDecl, FormalParams; 
 nonterminal OptionalStatementList, StatementList, Statement;
 nonterminal IfConstruct, WhileConstruct, ControlCondition, IfKeyWord, WhileKeyWord, ElseKeyWord;
@@ -144,10 +144,7 @@ ConstType ::= (ConstIntType) NUMBER
 			   
 			   
 VarDeclStart ::= (VarDeclarationStart) Type VarList SEMI
-				 |
-				 (VarDeclarationSemiError) error SEMI:l
-				 {: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :}
-				 ;
+;
 
 
 VarList ::= (VarDeclarationList) VarName COMMA VarList
@@ -157,6 +154,9 @@ VarList ::= (VarDeclarationList) VarName COMMA VarList
 			(VarDeclarationCommaError) error COMMA:l
 			{: parser.report_error("Oporavak od greske do , na liniji " + lleft, null); :}
 			VarList
+			|
+			(VarDeclarationSemiError) error:l
+			{: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :}
 		    ;
 		    
 VarName ::= (VarNameSingle) IDENT:varName
@@ -165,7 +165,7 @@ VarName ::= (VarNameSingle) IDENT:varName
 			;
 
 		     
-VarDeclList ::= (VarDeclarations) VarDeclList VarDeclStart
+VarDeclList ::= (VarDeclarations) VarDeclStart VarDeclList 
 				|
 				(NoVarDecl)/* epsilon */
 				;		
@@ -173,10 +173,7 @@ VarDeclList ::= (VarDeclarations) VarDeclList VarDeclStart
 			   
 			   
 ProgVarDeclStart ::= (ProgVarDeclarationStart) ProgVarType ProgVarList SEMI 
-					 |
-					 (ProgVarDeclarationSemiError) error SEMI:l
-					 {: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :}
-					 ;
+;
 
 
 
@@ -191,14 +188,18 @@ ProgVarList ::= (ProgVarListRec) ProgVarDeclaration COMMA ProgVarList
 				(ProgVarDeclarationCommaError) error COMMA:l
 				{: parser.report_error("Oporavak od greske do , na liniji " + lleft, null); :}
 				ProgVarList
+				|
+				(ProgVarListSemiError) error:l
+				{: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :}
 				;
 				
 ProgVarDeclaration ::= (ProgVar) VarName
 ;
 
 
-ProgClassDecl ::= (ClassDeclaration) ClassName OptionalClassExtends VarDeclList OptionalClassMethodDecl RBRACE
+ProgClassDecl ::= (ClassDeclaration) ClassName OptionalClassExtends FieldDeclList OptionalClassMethodDecl RBRACE
 ;
+
 
 ClassName ::= (ClassName) CLASS IDENT:name
 ;
@@ -208,11 +209,31 @@ OptionalClassExtends ::= (ClassExtends) EXT SuperClass LBRACE
 						 (NoClassExtends) /* epsilon */ LBRACE
 						 |
 						 (ExtendsError) error LBRACE:l
-						 {: parser.report_error("Oporavak od greske do LBRACE u liniji " + lleft, null); :}
+						 {: parser.report_error("Oporavak od greske do { u liniji " + lleft, null); :}
 						 ;
 
 SuperClass ::= (SuperClassIdent) IDENT:name
 ;
+
+
+FieldDeclList ::= (FieldDeclListExists) FieldDeclStart FieldDeclList
+				  |
+				  (NoFieldDecl) /* epsilon */
+				  ;
+				  
+FieldDeclStart ::= (FieldDeclarationStart) Type FieldList SEMI
+				   |
+				   (FieldDeclErrorSemi) error SEMI:l
+				   {: parser.report_error("Oporavak od greske do ; na liniji " + lleft, null); :}
+				   |
+				   (FieldDeclErrorBrace) error:l
+				   {: parser.report_error("Oporavak od greske do { na liniji " + lleft, null); :}
+				   ;
+				   				  
+FieldList ::= (FieldDeclarationList) VarName COMMA FieldList
+		      |
+		      (BaseFieldDeclarationList) VarName
+		      ;
 						 
 OptionalClassMethodDecl ::= (ClassMethodDecl) LBRACE ConstructorDeclList OptionalMethodDeclList RBRACE
 							|
@@ -248,7 +269,7 @@ MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDeclaration
 MethodDeclaration ::= (MethodDecl) MethodTypeAndName LPAREN FormalParams RPAREN VarDeclList LBRACE OptionalStatementList RBRACE 
 					  |
 					  (MethodDeclError) MethodTypeAndName LPAREN error RPAREN:l VarDeclList LBRACE OptionalStatementList RBRACE
-					  {: parser.report_error("Oporavak od greske do RPAREN na liniji " + lleft, null); :}
+					  {: parser.report_error("Oporavak od greske do ) na liniji " + lleft, null); :}
 					  ;
 
 MethodTypeAndName ::= (MethodTypeName) Type:retType IDENT:methName
@@ -351,7 +372,7 @@ ForeachDesignator ::= (ForeachDesignator) Designator DOT
 ControlCondition ::= (ControlConditionValid) LPAREN Condition RPAREN
 					 |
 					 (ControlConditionError) LPAREN error:l RPAREN
-					 {: parser.report_error("Oporavak od greske do RPAREN na liniji " + lleft, null); :}
+					 {: parser.report_error("Oporavak od greske do ) na liniji " + lleft, null); :}
 					 ;
 
 
@@ -395,7 +416,7 @@ DesignatorStatement ::= (AssignmentStatement) AssignmentStatementExpr
 
 
 AssignmentStatementExpr ::= (AssignmentExpr) Designator ASSIGN Expr
-; /* TODO: error handling */
+;
 					   	
 
 					   	

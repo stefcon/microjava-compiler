@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 7/1/2023 14:26:37
+// 8/1/2023 10:34:51
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -13,12 +13,15 @@ public interface Visitor {
     public void visit(ConstList ConstList);
     public void visit(VarName VarName);
     public void visit(OptionalStatementList OptionalStatementList);
+    public void visit(FieldDeclList FieldDeclList);
     public void visit(ProgVarDeclaration ProgVarDeclaration);
     public void visit(ConditionFactor ConditionFactor);
     public void visit(MethodDeclaration MethodDeclaration);
+    public void visit(FieldDeclStart FieldDeclStart);
     public void visit(Relop Relop);
     public void visit(OptionalMethodDeclList OptionalMethodDeclList);
     public void visit(FormalParamList FormalParamList);
+    public void visit(FieldList FieldList);
     public void visit(Expr Expr);
     public void visit(OptionalClassExtends OptionalClassExtends);
     public void visit(ConstType ConstType);
@@ -155,6 +158,13 @@ public interface Visitor {
     public void visit(ConstructorDeclarationList ConstructorDeclarationList);
     public void visit(NoClassMethodDecl NoClassMethodDecl);
     public void visit(ClassMethodDecl ClassMethodDecl);
+    public void visit(BaseFieldDeclarationList BaseFieldDeclarationList);
+    public void visit(FieldDeclarationList FieldDeclarationList);
+    public void visit(FieldDeclErrorBrace FieldDeclErrorBrace);
+    public void visit(FieldDeclErrorSemi FieldDeclErrorSemi);
+    public void visit(FieldDeclarationStart FieldDeclarationStart);
+    public void visit(NoFieldDecl NoFieldDecl);
+    public void visit(FieldDeclListExists FieldDeclListExists);
     public void visit(SuperClassIdent SuperClassIdent);
     public void visit(ExtendsError ExtendsError);
     public void visit(NoClassExtends NoClassExtends);
@@ -162,20 +172,20 @@ public interface Visitor {
     public void visit(ClassName ClassName);
     public void visit(ClassDeclaration ClassDeclaration);
     public void visit(ProgVar ProgVar);
+    public void visit(ProgVarListSemiError ProgVarListSemiError);
     public void visit(ProgVarDeclarationCommaError ProgVarDeclarationCommaError);
     public void visit(BaseProgVarDeclaration BaseProgVarDeclaration);
     public void visit(ProgVarListRec ProgVarListRec);
     public void visit(ProgVarType ProgVarType);
-    public void visit(ProgVarDeclarationSemiError ProgVarDeclarationSemiError);
     public void visit(ProgVarDeclarationStart ProgVarDeclarationStart);
     public void visit(NoVarDecl NoVarDecl);
     public void visit(VarDeclarations VarDeclarations);
     public void visit(VarNameArray VarNameArray);
     public void visit(VarNameSingle VarNameSingle);
+    public void visit(VarDeclarationSemiError VarDeclarationSemiError);
     public void visit(VarDeclarationCommaError VarDeclarationCommaError);
     public void visit(BaseVarDeclarationList BaseVarDeclarationList);
     public void visit(VarDeclarationList VarDeclarationList);
-    public void visit(VarDeclarationSemiError VarDeclarationSemiError);
     public void visit(VarDeclarationStart VarDeclarationStart);
     public void visit(ConstBoolType ConstBoolType);
     public void visit(ConstCharType ConstCharType);

@@ -598,7 +598,12 @@ public class CodeGenerator extends VisitorAdaptor {
 		// Preparing for new iteration
 		// ..., adr, ind
 		Code.put(Code.dup2); // ..., adr, ind, adr, ind
-		Code.put(Code.aload);
+		if (forIdent.obj.getType().equals(Tab.charType)) {
+			Code.put(Code.baload);
+		}
+		else {			
+			Code.put(Code.aload);
+		}
 		Code.store(forIdent.obj); // ..., adr, ind
 	}
 

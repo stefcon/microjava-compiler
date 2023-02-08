@@ -24,7 +24,7 @@ program MJProgram
 		return op * mul;
 	}
 	
-	int main() {
+	int main() char nizch[]; char c; {
 		x = 0;
 		y = 0;
 		
@@ -61,6 +61,12 @@ program MJProgram
 		
 		print(g(2, 4));
 		
+		print(eol);
+		nizch = new char[3];
+		nizch[0] = 'G';
+		nizch[1] = 'A';
+		nizch[2] = 'S';
+		nizch.foreach(c => print(c););
 
 		return 0;
 	}
