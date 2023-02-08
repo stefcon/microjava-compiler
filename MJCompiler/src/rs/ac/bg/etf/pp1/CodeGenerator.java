@@ -349,20 +349,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 	}
 
-	// Probaby not needed
-	private int isPartOfDesignatorListStmt(Designator designator) {
-		if (designator.getParent() instanceof DesignatorReal) {
-			// Left side of assignemnt
-			return 1;
-		} else if (designator.getParent() instanceof MultipleAssignmentStatement) {
-			// Right side, array
-			return 2;
-		}
-		return 0;
-	}
-
 	private boolean shouldLoadDesignator(Designator designator) {
-//		int designatorListElemRole = isPartOfDesignatorListStmt(designator);
 		if (inDesignatorList) {
 			return false;
 		} else if (inDesignatorList || designator.obj.getKind() == Obj.Meth
@@ -425,7 +412,6 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 
 	public void visit(DesignatorSingle designator) {
-		// isPartOfDesignatorListStmt(designator) == 0 TODO: Razmisliti sta sa ovim
 		if (isClassFieldOrMethod(designator.obj)) {
 			Code.put(Code.load_n);
 		}

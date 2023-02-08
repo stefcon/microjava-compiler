@@ -156,7 +156,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	public void visit(VarDeclarationStart varStart) {
 		declarationType = null;
 	}
-	
+
 	public void visit(FieldDeclarationStart varStart) {
 		declarationType = null;
 	}
@@ -220,8 +220,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 				potentialSubClass = potentialSubClass.getElemType();
 			}
 			return found;
-		}
-		else if (superClass.getKind() == Struct.Array && potentialSubClass.getKind() == Struct.Array ) {
+		} else if (superClass.getKind() == Struct.Array && potentialSubClass.getKind() == Struct.Array) {
 			return checkIfSubclass(superClass.getElemType(), potentialSubClass.getElemType());
 		}
 		return false;
@@ -369,7 +368,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		}
 
 		// Needed later for knowing if default constr. should be generated at the end
-		if (currentMethod.getLevel() == 1) { // TODO: possibly go back to 0
+		if (currentMethod.getLevel() == 1) {
 			defaultConstructorExists = true;
 		}
 
@@ -401,13 +400,13 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	public void visit(MethodVoidName method) {
 		processMethodAndTypeName(method, Tab.noType, method.getMethName());
 	}
-	
+
 	private boolean isOverrideCorrect(Obj superMethod, Obj overrideMethod) {
 		// Second parameters is Obj in currentMethod attribute
 		if (superMethod.getLevel() != overrideMethod.getLevel()) {
 			return false;
 		}
-		
+
 		Iterator<Obj> superParamIterator = superMethod.getLocalSymbols().iterator();
 		// Haven't connected locals to currentMethod yet
 //		Iterator<Obj> overrideParamIterator = Tab.currentScope().getLocals().symbols().iterator();
@@ -415,7 +414,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		for (int i = 0; i < superMethod.getLevel(); ++i) {
 			Obj superParam = superParamIterator.next();
 			Obj overrideParam = overrideParamIterator.next();
-			
+
 			if (!checkIfSubclass(superParam.getType(), overrideParam.getType())) {
 				return false;
 			}
@@ -428,20 +427,21 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			report_error("Semanticka greska: Nije pronadjen return tipa " + currentMethod.getType().getKind(),
 					methodDeclaration);
 		}
-		
+
 		Tab.chainLocalSymbols(currentMethod);
 		Tab.closeScope();
-		
+
 		if (currentClass != null && currentClass.getType().getElemType() != null) {
 			// Check if currentMethod represents override function
 			Obj superMethod = currentClass.getType().getElemType().getMembersTable().searchKey(currentMethod.getName());
 			if (superMethod != null && superMethod.getKind() == Obj.Meth) {
 				if (!isOverrideCorrect(superMethod, currentMethod)) {
-					report_error("Semanticka greska: Preklopljena methoda nema isti potpis kao metoda natklase", methodDeclaration);
+					report_error("Semanticka greska: Preklopljena methoda nema isti potpis kao metoda natklase",
+							methodDeclaration);
 				}
 			}
 		}
-		
+
 		// Add to global functions and check if this is the main() function
 		if (currentClass == null) {
 			globalFunctions.add(currentMethod);
@@ -468,7 +468,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		if (currentMethod == null) {
 			report_error("Semanticka greska: return pronadjen van funkcije", ret);
 		}
-		
+
 		// !ret.getExpr().struct.compatibleWith(currentMethod.getType())
 		if (currentMethod == null && !checkIfSubclass(currentMethod.getType(), ret.getExpr().struct)) {
 			report_error("Semanticka greska: return vraca nekompatibilan tip", ret);
@@ -541,8 +541,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 				designator.getDesignator().obj.getType().getElemType());
 	}
 
-	// TODO: Ovo OBAVEZNO istestirati fino! (Moraju najpre i konstruktori, ima
-	// posla)
 	public void visit(DesignatorField designator) {
 		Obj obj;
 		if (currentClass != null && designator.getDesignator().obj.getName().equals(THIS)) {
@@ -624,8 +622,8 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		} else {
 			Struct designatorElementType = designatorType.getElemType();
 			for (Struct designatorListElementType : designatorListTypes) {
-				if (!designatorElementType.assignableTo(designatorListElementType) 
-					&& !checkIfSubclass(designatorListElementType, designatorElementType)) {
+				if (!designatorElementType.assignableTo(designatorListElementType)
+						&& !checkIfSubclass(designatorListElementType, designatorElementType)) {
 					report_error("Semanticka greska: nekompatibilan tip u okviru liste dezignatora",
 							multipleAssignmentStmt);
 					break;
@@ -675,7 +673,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			while (localSymbolsIter.hasNext() && actualParamIterator.hasNext()) {
 				Obj parameter = localSymbolsIter.next();
 				Struct actualType = actualParamIterator.next();
-
 
 				boolean assignable = checkIfSubclass(parameter.getType(), actualType);
 				if (!assignable) {
@@ -733,7 +730,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		for (Obj classConstructor : classConstructorsMap.get(className)) {
 			int formalParametersNum = classConstructor.getLevel() - 1;
 
-			if (actualParameters.size() != formalParametersNum) // TODO: classConstructor.getLevel()
+			if (actualParameters.size() != formalParametersNum)
 				continue;
 
 			match = true;
@@ -746,7 +743,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 			for (int i = 0; i < formalParametersNum; ++i) {
 				Struct actualParamter = actualParamIterator.next();
 				Obj constructorParameter = constructorParamIterator.next();
-				
+
 				// Statically connected, need to be exactly the same type
 				if (!actualParamter.assignableTo(constructorParameter.getType())) {
 					match = false;
@@ -838,18 +835,18 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 	public void visit(ConditionFactorRel conditionFactor) {
 		Struct type_first = conditionFactor.getExpr().struct;
 		Struct type_second = conditionFactor.getExpr1().struct;
-		if (!type_first.compatibleWith(type_second) 
-			&& !checkIfSubclass(type_first, type_second)
-			&& !checkIfSubclass(type_second, type_first)) {
+		if (!type_first.compatibleWith(type_second) && !checkIfSubclass(type_first, type_second)
+				&& !checkIfSubclass(type_second, type_first)) {
 			report_error("Semanticka greska: Nekompatibilni tipovi u relaciji", conditionFactor);
-		}
-		else if (type_first.getKind() == Struct.Array || type_first.getKind() == Struct.Class) {
+		} else if (type_first.getKind() == Struct.Array || type_first.getKind() == Struct.Class) {
 			Relop relop = conditionFactor.getRelop();
 			if (!(relop instanceof EqualsOp) && !(relop instanceof NotEqualsOp)) {
-				report_error("Semanticka greska: objekti klasa i nizovi mogu da se porede samo sa operatorima '==' ili '!='", conditionFactor);
+				report_error(
+						"Semanticka greska: objekti klasa i nizovi mogu da se porede samo sa operatorima '==' ili '!='",
+						conditionFactor);
 			}
 		}
-		
+
 		conditionFactor.struct = boolType;
 	}
 
@@ -916,7 +913,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 		}
 		Struct elemType = designatorObj.getType().getElemType();
 		Struct identType = foreach.getForIdent().obj.getType();
-		if (!checkIfSubclass(identType, elemType)) { // TODO: Should include normal types?
+		if (!checkIfSubclass(identType, elemType)) {
 			report_error("Semanticka greska: Nekompatibilni tipovi u foreach petlji", foreach);
 		}
 	}
