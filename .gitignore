@@ -1,4 +1,7 @@
-MJCompiler/out/
+.metadata
+.recommenders
+RemoteSystemsTempFiles
+MJCompiler/bin/
 MJCompiler/logs/
 *.class
 MJCompiler/src/rs/ac/bg/etf/pp1/ast/
